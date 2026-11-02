@@ -126,6 +126,12 @@ for url,html in pages.items():
             del script['async']
             script['defer']=''
         if any(x in src for x in ('tilda-fallback','tilda-events')) or (not src and any(x in script.text for x in ('mainTracker','tildastat','google-analytics','mc.yandex','sessionStorage','dataLayer'))): script.decompose()
+    # Use the organization's public map widget instead of the broken JS API embed.
+    original_map=soup.select_one('#rec773898881')
+    if original_map:
+        for anchor in soup.select('a[name="contacts"]'): anchor.decompose()
+        replacement=BeautifulSoup((ROOT/'scripts/map-block.html').read_text(),'html.parser').div
+        original_map.replace_with(replacement)
     for tag in soup.select('link[rel="dns-prefetch"],link[rel="canonical"]'): tag.decompose()
     for tag in soup.find_all(True):
         for attr in list(tag.attrs):
