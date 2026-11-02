@@ -27,21 +27,37 @@
   HTMLFormElement.prototype.submit = function () { showNotice(this); };
   HTMLFormElement.prototype.requestSubmit = function () { showNotice(this); };
   // Network-level defence in addition to the document's connect-src and form-action policy.
+  function localReadOnlyResource(resource) {
+    const url = new URL(resource instanceof Request ? resource.url : resource, location.href);
+    if (/^feeds\.(tildaapi\.(biz|com)|tildacdn\.com)$/.test(url.hostname)) {
+      if (url.pathname === '/api/getfeed/') {
+        const uid = url.searchParams.get('feeduid');
+        const size = Number(url.searchParams.get('size')) || 20;
+        const slice = Number(url.searchParams.get('slice')) || 1;
+        if (/^\d+$/.test(uid)) return new URL(`/feeds/${uid}-${size}-${slice}.json`, location.origin);
+      }
+      if (url.pathname === '/api/getpost/') {
+        const uid = url.searchParams.get('postuid');
+        if (/^[a-z0-9]+$/.test(uid)) return new URL(`/feeds/post-${uid}.json`, location.origin);
+      }
+    }
+    return url;
+  }
   const originalFetch = window.fetch;
   window.fetch = function (resource, options) {
-    const url = new URL(resource instanceof Request ? resource.url : resource, location.href);
+    const url = localReadOnlyResource(resource);
     if (url.origin !== location.origin || (options?.method || 'GET').toUpperCase() !== 'GET') {
       return Promise.reject(new Error('Requests are disabled in this preview'));
     }
-    return originalFetch.apply(this, arguments);
+    return originalFetch.call(this, url.href, options);
   };
   const open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (method, url) {
-    const target = new URL(url, location.href);
+    const target = localReadOnlyResource(url);
     if (target.origin !== location.origin || String(method).toUpperCase() !== 'GET') {
       throw new Error('Requests are disabled in this preview');
     }
-    return open.apply(this, arguments);
+    return open.call(this, method, target.href, ...Array.from(arguments).slice(2));
   };
   navigator.sendBeacon = () => false;
 })();

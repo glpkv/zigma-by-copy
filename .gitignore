@@ -2,3 +2,4 @@
 .cache/
 .DS_Store
 *.tar.gz
+__pycache__/
