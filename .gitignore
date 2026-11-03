@@ -12,3 +12,5 @@ dist/
 .sites-runtime/
 .dev.vars*
 .openai/execution-profile.json
+
+.vinext/

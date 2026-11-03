@@ -18,7 +18,7 @@ for route,filename in pages.items():
         if a['href'].startswith(('#zeropopup-','#popup:')) and a['href'] not in hooks: errors.append(filename+': missing popup '+a['href'])
         if a['href']=='#appointment' and not soup.select_one('#appointment-dialog'): errors.append(filename+': missing appointment dialog')
     if not soup.title: errors.append(filename+': missing title')
-    guard=soup.select_one('head > script[src="/local-only.js"]')
+    guard=soup.select_one('head > script[src^="/local-only.js"]')
     if not guard: errors.append(filename+': missing form guard')
     policy=soup.find('meta',attrs={'http-equiv':'Content-Security-Policy'})
     if not policy or "form-action 'none'" not in policy['content']: errors.append(filename+': form policy missing')

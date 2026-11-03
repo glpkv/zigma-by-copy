@@ -8,9 +8,9 @@
 .zigma-photo-source{visibility:hidden!important}
 @keyframes zigma-conveyor{from{transform:translateX(var(--photo-start))}to{transform:translateX(calc(var(--photo-start) - var(--photo-period)))}}
 @media(prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine){
- .zigma-motion-button{transition:box-shadow .3s ease,filter .3s ease!important}
- .zigma-motion-button:hover{box-shadow:0 4px 14px #00000018;filter:brightness(1.035)}
- .zigma-motion-button:active{filter:brightness(.97)}
+ .zigma-motion-button{transition:scale .38s cubic-bezier(.2,1.45,.4,1),box-shadow .3s ease,filter .3s ease!important}
+ .zigma-motion-button:hover{scale:1.015;box-shadow:0 4px 14px #00000018;filter:brightness(1.035)}
+ .zigma-motion-button:active{scale:.995;filter:brightness(.97)}
  .zigma-card-photo:before{transition:transform .7s var(--zigma-motion-ease)}
  .zigma-card-photo.zigma-card-active:before,.zigma-card-photo:hover:before{transform:scale(1.045)}
  .t-feed__post .js-feed-post-image{transition:scale .7s var(--zigma-motion-ease)}

@@ -19,9 +19,9 @@ try{
  assert.equal(redirect.status,308);assert.equal(redirect.headers.get('Location'),'https://gleblapkovsky.com/zigma/');
  const htmlResponse=await gateway.fetch(request('/zigma/'));
  const html=await htmlResponse.text();
- assert.match(html,/href="\/zigma\/motion.css\?v=3"/);
+ assert.match(html,/href="\/zigma\/motion.css\?v=5"/);
  assert.match(html,/href="https:\/\/gleblapkovsky.com\/zigma\/"[^>]*rel="canonical"/);
- assert.match(html,/src="\/zigma\/local-only.js"/);
+ assert.match(html,/src="\/zigma\/local-only.js\?v=2"/);
  assert.match(html,/href="\/zigma\/#about"/);
  assert.equal(htmlResponse.headers.get('Set-Cookie'),null);assert.equal(htmlResponse.headers.get('Content-Length'),null);
  const js=await (await gateway.fetch(request('/zigma/local-only.js'))).text();
@@ -35,6 +35,6 @@ try{
  assert.equal((await gateway.fetch(post('https://gleblapkovsky.com'))).status,200);
  assert.equal(forwarded.url,'https://zigma-clinic-copy.afootdate1.chatgpt.site/api/appointments');
  assert.equal(forwarded.options.headers.get('Origin'),'https://zigma-clinic-copy.afootdate1.chatgpt.site');
- const root=await (await gateway.fetch(new Request('https://zigma-clinic.jikoku.workers.dev/'))).text();assert.match(root,/src="\/local-only.js"/);
+ const root=await (await gateway.fetch(new Request('https://zigma-clinic.jikoku.workers.dev/'))).text();assert.match(root,/src="\/local-only.js\?v=2"/);
  console.log('PASS: subpath HTML, CSS, JavaScript, feeds, canonical URLs, redirects, legacy URL and POST origin/body limits.');
 }finally{globalThis.fetch=originalFetch;}

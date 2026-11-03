@@ -28,5 +28,5 @@ export async function handleAppointments(request, env, store = saveAppointment) 
     validateAppointment(data);
   } catch {return json({error:'INVALID_FORM'},400);}
   try {const result=await store(data,env.APPOINTMENTS_GITHUB_TOKEN);return json({ok:true,id:result.id},201);}
-  catch {return json({error:'SAVE_FAILED'},503);}
+  catch(error) {const code=/^[A-Z_]+(?:_\d{3})?$/.test(error?.message||'')?error.message:'UPSTREAM_UNAVAILABLE';console.error('APPOINTMENT_SAVE_FAILED',JSON.stringify({code}));return json({error:'SAVE_FAILED'},503);}
 }

@@ -30,21 +30,26 @@
       notice.textContent = 'Укажите имя, белорусский номер +375 и подтвердите согласие на обработку данных.';
       return;
     }
-    const values = JSON.stringify({name,phone,consent});
+    let selection;
+    try {selection=JSON.parse(form.querySelector('input[name="selection"]')?.value || '[]');} catch {notice.textContent='Не удалось прочитать выбранные услуги. Откройте помощник ещё раз.';return;}
+    const values = JSON.stringify({name,phone,consent,selection});
     if (form.dataset.requestValues !== values) {
       form.dataset.requestId = crypto.randomUUID();
       form.dataset.requestValues = values;
     }
     form.dataset.sending = 'true';
     notice.textContent = 'Сохраняем заявку…';
+    const submit=form.querySelector('button[type="submit"],input[type="submit"],.t-submit');if(submit)submit.disabled=true;
     try {
-      const response = await originalFetch.call(window, '/api/appointments', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname})});
+      const response = await originalFetch.call(window, '/api/appointments', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname,selection})});
       const result = await response.json();
       if (!response.ok || result.ok !== true) throw new Error('SAVE_FAILED');
-      notice.textContent = 'Заявка сохранена. Администратор свяжется с вами для согласования времени.';
+      notice.textContent = 'Заявка сохранена. Администратор свяжется с вами, уточнит стоимость и согласует время. Это запрос на обратный звонок, время приёма ещё не забронировано.';
+      form.dispatchEvent(new CustomEvent('appointment:saved',{bubbles:true}));
       form.reset();
+      notice.tabIndex=-1;notice.focus();
     } catch {notice.textContent = 'Не удалось подтвердить сохранение заявки. Попробуйте ещё раз или позвоните +375 29 640-03-03.';}
-    finally {delete form.dataset.sending;}
+    finally {delete form.dataset.sending;if(submit)submit.disabled=false;}
   }
   document.addEventListener('submit', (event) => {
     event.preventDefault(); event.stopImmediatePropagation();

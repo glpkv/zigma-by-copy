@@ -1,0 +1,12 @@
+{
+  "version": "2026-11-03-awaiting-clinic-prices",
+  "currency": "BYN",
+  "services": [
+    {"id":"consultation","label":"Консультация стоматолога","description":"Хочу обсудить ситуацию и варианты лечения","unit":"визит","maxQuantity":1,"min":null,"max":null},
+    {"id":"caries","label":"Лечение кариеса","description":"Выберите предполагаемое количество зубов","unit":"зуб","maxQuantity":16,"min":null,"max":null},
+    {"id":"hygiene","label":"Профессиональная гигиена","description":"Уход за зубами и полостью рта","unit":"процедура","maxQuantity":1,"min":null,"max":null},
+    {"id":"whitening","label":"Отбеливание зубов","description":"Обсудить возможность и подходящий метод","unit":"процедура","maxQuantity":1,"min":null,"max":null},
+    {"id":"implantation","label":"Имплантация","description":"Обсудить восстановление отсутствующих зубов","unit":"зуб","maxQuantity":16,"min":null,"max":null},
+    {"id":"bone-grafting","label":"Костная пластика","description":"Уточнить необходимость и объём процедуры","unit":"консультация","maxQuantity":1,"min":null,"max":null}
+  ]
+}

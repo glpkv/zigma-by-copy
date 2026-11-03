@@ -37,18 +37,18 @@
       const groups=new Map(),br=board.getBoundingClientRect(),ratio=br.width/board.offsetWidth;
       if(!ratio)return;
       board.querySelectorAll('.tn-atom.t-bgimg[data-original]').forEach(atom=>{
-        const elem=atom.parentElement,r=elem.getBoundingClientRect();if(!r.width||!r.height)return;
+        const elem=atom.closest('.tn-elem'),r=elem.getBoundingClientRect();if(!r.width||!r.height)return;
         const y=Math.round((r.top-br.top)/ratio),x=Math.round((r.left-br.left)/ratio);
         if(!groups.has(y))groups.set(y,[]);
         groups.get(y).push({atom,elem,x,width:r.width/ratio,height:r.height/ratio});
       });
-      const sources=[...new Set([...groups.values()].flat().map(p=>p.atom.dataset.original))];
       let line=0;
       for(const [y,photos] of groups){
         photos.sort((a,b)=>a.x-b.x);
         const unique=photos.filter((p,i)=>!i||p.x!==photos[i-1].x);if(unique.length<3)continue;
-        const width=unique[0].width,gap=unique[1].x-unique[0].x-width,period=sources.length*(width+gap);
-        const sequence=sources.map((_,index)=>sources[(index+line*3)%sources.length]);
+        const sequence=[...new Set(unique.map(p=>p.atom.dataset.original))];
+        const width=unique[0].width,gap=unique[1].x-unique[0].x-width,period=sequence.length*(width+gap);
+        if(sequence.length<2)continue;
         if(gap<0||gap>100)continue;
         const row=document.createElement('div'),track=document.createElement('div');row.className='zigma-photo-row';track.className='zigma-photo-track';
         row.setAttribute('aria-hidden','true');row.style.top=y+'px';row.style.height=unique[0].height+'px';

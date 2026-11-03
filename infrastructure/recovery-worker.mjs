@@ -2,7 +2,7 @@ const ORIGIN='https://zigma-clinic-copy.afootdate1.chatgpt.site';
 const PRIMARY='https://gleblapkovsky.com/zigma';
 const MOTION_CSS=__MOTION_CSS__;
 const MOTION_JS=__MOTION_JS__;
-const KNOWN_ROOT=/(["'`(]\s*)\/(?=(?:assets|feeds|vendor|api|about|therapy|otbelivanie|implantation|privacy-policy|tpost|page\d+(?:\.html)?|local-only\.js|phone-input\.js|site-enhancements\.(?:js|css)|theme\.css|responsive\.css)(?:[\/"'`?#)\s]|$))/g;
+const KNOWN_ROOT=/(["'`(]\s*)\/(?=(?:assets|feeds|vendor|api|about|therapy|otbelivanie|implantation|privacy-policy|tpost|page\d+(?:\.html)?|service-catalog\.json|service-assistant\.(?:js|css)|local-only\.js|phone-input\.js|site-enhancements\.(?:js|css)|theme\.css|responsive\.css)(?:[\/"'`?#)\s]|$))/g;
 function rewritePaths(text,base,html=false){
  if(base){
   if(html)text=text.replace(/\b(href|src|data-original|data-img-zoom-url|action|poster|content)=(['"])\/(?!\/)/gi,(_,name,quote)=>name+'='+quote+base+'/');
@@ -40,13 +40,13 @@ export default {async fetch(request){
  const type=output.get('Content-Type')||'';
  if(/text\/html|javascript|text\/css|application\/json/.test(type)){
   let text;try{text=await limitedText(response,2_000_000);}catch{return new Response('Resource exceeds the supported size',{status:502});}
-  const html=/text\/html/.test(type);text=rewritePaths(text,base,html);
+  const html=/text\/html/.test(type);if(path!=='/service-assistant.js')text=rewritePaths(text,base,html);
   if(html){
    const canonical=PRIMARY+path;
    text=text.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi,tag=>tag.replace(/href=["'][^"']*["']/i,'href="'+canonical+'"'))
     .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi,tag=>tag.replace(/content=["'][^"']*["']/i,'content="'+canonical+'"'));
    const canonicalTag=/<link\b[^>]*rel=["']canonical["']/i.test(text)?'':`<link href="${canonical}" rel="canonical">`;
-   text=text.replace('</head>',`${canonicalTag}<link rel="stylesheet" href="${base}/motion.css?v=3"><script defer src="${base}/motion.js?v=3"></script></head>`);
+   text=text.replace('</head>',`${canonicalTag}<link rel="stylesheet" href="${base}/motion.css?v=5"><script defer src="${base}/motion.js?v=5"></script></head>`);
   }
   output.delete('Content-Length');output.delete('Content-Encoding');output.delete('ETag');
   return new Response(text,{status:response.status,headers:output});
