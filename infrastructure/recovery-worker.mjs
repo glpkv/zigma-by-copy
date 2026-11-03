@@ -1,4 +1,5 @@
-const ORIGIN='https://zigma-clinic-copy.afootdate1.chatgpt.site';
+const ORIGIN='https://zigma-clinic-o7p3j.ondigitalocean.app';
+const API_ORIGIN='https://zigma-clinic-copy.afootdate1.chatgpt.site';
 const TRUSTED_ORIGINS=new Set(['https://zigma-clinic-o7p3j.ondigitalocean.app','https://gleblapkovsky.com','https://www.gleblapkovsky.com']);
 const PRIMARY='https://gleblapkovsky.com/zigma';
 const MOTION_CSS=__MOTION_CSS__;
@@ -31,7 +32,7 @@ export default {async fetch(request){
  if(!['GET','HEAD','POST'].includes(request.method))return new Response('Method not allowed',{status:405});
  if(request.method==='POST'&&(path!=='/api/appointments'||!trusted))return new Response('Forbidden',{status:403});
  if(request.method!=='POST'&&(path==='/motion.css'||path==='/motion.js'))return new Response(request.method==='HEAD'?null:(path.endsWith('.css')?MOTION_CSS:MOTION_JS),{headers:{'Content-Type':path.endsWith('.css')?'text/css; charset=utf-8':'text/javascript; charset=utf-8','Cache-Control':'public, max-age=300'}});
- const upstream=new URL(ORIGIN);upstream.pathname=path;upstream.search=incoming.search;
+ const upstream=new URL(api?API_ORIGIN:ORIGIN);upstream.pathname=path;upstream.search=incoming.search;
  const headers=new Headers({'Accept':request.headers.get('Accept')||'*/*','User-Agent':'Zigma-Clinic-Public-Hosting/2.0'});let body;
  if(request.method==='POST'){
   if(!request.headers.get('Content-Type')?.startsWith('application/json'))return new Response('Unsupported content type',{status:415});
