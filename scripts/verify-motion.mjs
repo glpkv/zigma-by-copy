@@ -16,7 +16,7 @@ function scenario(reduced){
  if(reduced){assert.equal(created,0);assert.equal(observer,undefined);assert.equal(node.dataset.zigmaSeen,undefined);}
  else{
   assert.equal(observer.nodes.length,1);observer.callback([{target:node,isIntersecting:true}]);assert.equal(node.dataset.zigmaSeen,'true');
-  assert.ok(frames.every(frame=>Object.keys(frame).every(key=>['opacity','translate','clipPath','scale'].includes(key))));
+  assert.ok(frames.every(frame=>Object.keys(frame).every(key=>key==='opacity')));
   preference.matches=true;change();assert.equal(cancelled,1);assert.equal(removed,1);assert.equal(observer.disconnected,true);
  }
 }
