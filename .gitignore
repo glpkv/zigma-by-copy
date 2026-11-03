@@ -16,3 +16,6 @@ dist/
 .vinext/
 
 deployment/
+
+.playwright-cli/
+output/playwright/

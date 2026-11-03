@@ -133,6 +133,15 @@ for page in PUBLIC.rglob('*.html'):
                 return max(channels)-min(channels)<=24
             if 'data:image' not in source and all(neutral(color) for color in colors):
                 image['class']=list(dict.fromkeys(image.get('class',[])+['site-monochrome']))
+    for answer in soup.select('.t585__text'):
+        if answer.get_text(strip=True).startswith('Our managers'):
+            answer.string='Обсудите этот вопрос со стоматологом на консультации. Для выбора времени визита оставьте заявку или свяжитесь с администратором клиники.'
+        elif answer.get_text(strip=True).startswith('Our company'):
+            answer.string='Если вас интересует лечение под общим наркозом, уточните доступность этой услуги у администратора и обсудите свой запрос с врачом на консультации.'
+    if not soup.select_one('script[src^="/interactions.js"]'):
+        soup.body.append(soup.new_tag('script',src='/interactions.js?v=1',defer=''))
+    for stylesheet in soup.select('link[href="/site-enhancements.css"]'):
+        stylesheet['href']='/site-enhancements.css?v=2'
     page.write_text(str(soup))
 for file in (PUBLIC/'assets').glob('*.css'):file.write_text(transform_css(file.read_text()))
 palette_file.write_text(json.dumps(palette,indent=2))

@@ -8,3 +8,16 @@ html,body{overflow-x:clip} .t-records,.t-records_animated{opacity:1!important;tr
 
 .clinic-map__canvas{width:100%;background:#e9eedf}.clinic-pin{background:none!important;border:0!important}.clinic-pin__dot{display:block;width:25px;height:25px;background:#e84c42;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 7px #0005}.clinic-pin__dot::after{content:"";display:block;width:8px;height:8px;border-radius:50%;background:#fff;margin:8px}.clinic-map__canvas .leaflet-tooltip{font:600 14px/1.3 font,Arial,sans-serif;color:#1a1a1a;border:0;border-radius:6px;box-shadow:0 1px 6px #0002}.clinic-map__canvas .leaflet-control-attribution{font-size:10px}
 .site-dialog input[type="checkbox"]{display:inline-block;width:18px;height:18px;margin:0 6px 0 0;padding:0;vertical-align:middle}
+
+/* Controls have the same visual direction as their action and remain keyboard accessible. */
+.site-carousel-button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;box-sizing:border-box;padding:10px;border:1px solid var(--site-line,#d9d9de);border-radius:50%;background:var(--site-header,#fff);color:var(--site-ink,#1a1a1a);cursor:pointer;flex:none}
+.site-carousel-button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.site-carousel-button:disabled{opacity:.35;cursor:default}.site-carousel-button:focus-visible,.site-carousel-viewport:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.site-carousel-toolbar{position:absolute;left:max(20px,calc(50% - 580px));top:20px;display:flex;gap:8px;z-index:150}.site-carousel-toolbar[hidden]{display:none!important}
+.site-carousel-viewport{overflow-x:auto!important;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:thin}
+.arrow-left[hidden],.arrow-right[hidden]{display:none!important}
+.t585__content[hidden]{display:none!important}.t585__header{cursor:pointer}.t585__trigger-button{width:100%}
+.tn-elem:has(>.site-carousel-button){min-width:44px;min-height:44px}.tn-elem>.site-carousel-button{transform:none!important}
+@media(max-width:959px){.site-legacy-header{display:none!important}.site-carousel-toolbar{left:20px;top:28px}}
+@media(max-width:479px){.site-carousel-toolbar{left:max(16px,calc(50% - 155px));top:18px}.tn-elem:has(>.site-carousel-button):has(+.tn-elem>.site-carousel-button){margin-left:-6px}.tn-elem:has(>.site-carousel-button)+.tn-elem:has(>.site-carousel-button){margin-left:8px}}
+@media(min-width:960px){.site-carousel-toolbar{top:8px}}
