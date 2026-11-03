@@ -19,7 +19,6 @@
  html[data-site-motion="on"] .zigma-photo-track>.zigma-photo:hover{scale:1.055;z-index:3;filter:brightness(1.06)}
 }
 @media(max-width:959px){.zigma-photo{border-radius:9px!important}}
-html[data-site-motion="off"] .zigma-scroll-progress{display:none}html[data-site-motion="off"] .zigma-motion-button,html[data-site-motion="off"] .zigma-photo{transition:none!important}html[data-site-motion="off"] .zigma-photo-row{display:none}html[data-site-motion="off"] .zigma-photo-source{visibility:visible!important}
 
 .zigma-card-photo{position:relative;background-image:none!important}
 .zigma-card-photo:before{content:"";position:absolute;inset:0;background-image:var(--zigma-card-image);background-size:cover;background-position:center;border-radius:inherit;pointer-events:none}

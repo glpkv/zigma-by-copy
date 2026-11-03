@@ -1,23 +1,20 @@
 (() => {
   'use strict';
-  const systemPreference=matchMedia('(prefers-reduced-motion: reduce)');
-  let savedMotion;
-  try {savedMotion=localStorage.getItem('zigma-motion');const requested=new URL(location.href).searchParams.get('motion');if(requested==='on'||requested==='off'){savedMotion=requested;localStorage.setItem('zigma-motion',requested);}} catch {}
-  const preference={get matches(){return savedMotion==='off'||(savedMotion!=='on'&&systemPreference.matches);},addEventListener:(type,callback)=>systemPreference.addEventListener(type,callback)};
-  document.documentElement.dataset.siteMotion=preference.matches?'off':'on';
+  // Motion is enabled on every ordinary visit; URL flags and old saved values are ignored.
+  document.documentElement.dataset.siteMotion='on';
   const ease='cubic-bezier(.16,1,.3,1)';
   const excluded='.zigma-header-surface,.uc-menu-ap,#rec375959943,#rec774364427,header,footer,#t-header,#t-footer,.site-mobile-header,.site-mobile-footer,form,dialog,.t-popup,.t450,.clinic-map';
   const textSelector='.tn-elem[data-elem-type="text"]>.tn-atom,.t-title,.t-descr,.t-text,.t-feed__title,.t-feed__descr';
   const photoSelector='.tn-elem[data-elem-type="image"]>.tn-atom,.tn-atom.t-bgimg[data-original],.tn-atom__slds-img,.js-feed-post-image,.tn-atom[style*="background-image"]';
   const active=new Set();let observer,progress,scheduled=false;
   function play(node,kind) {
-    if(preference.matches||node.dataset.zigmaSeen)return;
+    if(node.dataset.zigmaSeen)return;
     node.dataset.zigmaSeen='true';
     const animation=node.animate([{opacity:.12},{opacity:1}],{duration:1050,easing:ease,fill:'none'});
     active.add(animation);animation.finished.catch(()=>{}).finally(()=>active.delete(animation));
   }
   function collect(root) {
-    if(preference.matches||!root.querySelectorAll)return;
+    if(!root.querySelectorAll)return;
     const candidates=[...(root.matches?.(textSelector+','+photoSelector)?[root]:[]),...root.querySelectorAll(textSelector+','+photoSelector)];
     for(const node of candidates){
       if(node.dataset.zigmaMotion||node.closest('.zigma-photo-row,.zigma-photo-source')||node.closest(excluded)||!node.getClientRects().length)continue;
@@ -27,7 +24,7 @@
       node.dataset.zigmaMotion=photo?'photo':'text';observer.observe(node);
     }
   }
-  function updateProgress(){scheduled=false;if(!progress||preference.matches)return;const max=document.documentElement.scrollHeight-innerHeight;progress.style.transform=`scaleX(${max>0?Math.min(1,Math.max(0,scrollY/max)):0})`;}
+  function updateProgress(){scheduled=false;if(!progress)return;const max=document.documentElement.scrollHeight-innerHeight;progress.style.transform=`scaleX(${max>0?Math.min(1,Math.max(0,scrollY/max)):0})`;}
   function scheduleProgress(){if(!scheduled){scheduled=true;requestAnimationFrame(updateProgress);}}
   function decorate(){
     document.querySelectorAll(photoSelector).forEach(node=>{
@@ -95,10 +92,10 @@
   function start(){
     prepareHeaders();decorate();cards();
     document.querySelectorAll('.tn-elem[data-elem-type="button"]>.tn-atom,.t-submit,.site-dialog__submit,.site-mobile-header__appointment,.site-mobile-footer__cta,.clinic-map__route').forEach(node=>node.classList.add('zigma-motion-button'));
-    if(preference.matches||!('IntersectionObserver' in window)||!Element.prototype.animate)return;
+    if(!('IntersectionObserver' in window)||!Element.prototype.animate)return;
     conveyors();
 
-    let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{document.querySelectorAll('.zigma-photo-row').forEach(n=>n.remove());document.querySelectorAll('.zigma-photo-source').forEach(n=>n.classList.remove('zigma-photo-source'));if(!preference.matches)conveyors();},250);},{passive:true});
+    let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{document.querySelectorAll('.zigma-photo-row').forEach(n=>n.remove());document.querySelectorAll('.zigma-photo-source').forEach(n=>n.classList.remove('zigma-photo-source'));conveyors();},250);},{passive:true});
     progress=document.createElement('div');progress.className='zigma-scroll-progress';progress.setAttribute('aria-hidden','true');document.body.appendChild(progress);
     observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){observer.unobserve(entry.target);play(entry.target,entry.target.dataset.zigmaMotion);}},{threshold:.12,rootMargin:'0px 0px -65px 0px'});
     collect(document);window.addEventListener('load',()=>{prepareHeaders();decorate();cards();collect(document);conveyors();},{once:true});
@@ -106,7 +103,6 @@
     window.addEventListener('scroll',scheduleProgress,{passive:true});window.addEventListener('resize',scheduleProgress,{passive:true});scheduleProgress();
 
   }
-  preference.addEventListener('change',()=>{document.documentElement.dataset.siteMotion=preference.matches?'off':'on';if(preference.matches){observer?.disconnect();for(const animation of active)animation.cancel();active.clear();progress?.remove();}});
   const ready=()=>requestAnimationFrame(()=>requestAnimationFrame(start));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();

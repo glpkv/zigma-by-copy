@@ -46,7 +46,7 @@ export default {async fetch(request){
    text=text.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi,tag=>tag.replace(/href=["'][^"']*["']/i,'href="'+canonical+'"'))
     .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi,tag=>tag.replace(/content=["'][^"']*["']/i,'content="'+canonical+'"'));
    const canonicalTag=/<link\b[^>]*rel=["']canonical["']/i.test(text)?'':`<link href="${canonical}" rel="canonical">`;
-   const motionTags=text.includes('/motion.js?')?'':`<link rel="stylesheet" href="${base}/motion.css?v=6"><script defer src="${base}/motion.js?v=6"></script>`;
+   const motionTags=text.includes('/motion.js?')?'':`<link rel="stylesheet" href="${base}/motion.css?v=7"><script defer src="${base}/motion.js?v=7"></script>`;
    text=text.replace('</head>',`${canonicalTag}${motionTags}</head>`);
   }
   output.delete('Content-Length');output.delete('Content-Encoding');output.delete('ETag');
