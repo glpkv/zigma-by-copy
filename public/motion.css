@@ -1,0 +1,9 @@
+/* Motion changes only composited paint, never layout or the scroll position. */
+:root{--zigma-motion-ease:cubic-bezier(.16,1,.3,1)}
+.zigma-scroll-progress{position:fixed;inset:0 auto auto 0;width:100%;height:2px;z-index:200000;background:currentColor;opacity:.45;transform:scaleX(0);transform-origin:left center;pointer-events:none;contain:strict}
+@media(prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine){
+ .zigma-motion-button{transition:translate .35s var(--zigma-motion-ease),box-shadow .35s var(--zigma-motion-ease)!important}
+ .zigma-motion-button:hover{translate:0 -2px;box-shadow:0 10px 28px #00000020}
+ .zigma-motion-button:active{translate:0 0;transition-duration:.12s!important}
+}
+@media(prefers-reduced-motion:reduce){.zigma-scroll-progress{display:none}.zigma-motion-button{transition:none!important}}
