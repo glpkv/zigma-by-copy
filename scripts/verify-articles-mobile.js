@@ -25,7 +25,7 @@ async(page)=>{
         await page.getByRole('button',{name:'Закрыть пост',exact:true}).click();await popup.waitFor({state:'hidden'});await page.waitForURL('**/page51061211.html');
         assert(new URL(page.url()).pathname==='/page51061211.html','closing article did not restore list URL');
         const more=page.locator('.js-feed-btn-show-more').filter({visible:true});
-        if(await more.count()){const old=await page.locator('.js-feed-container>.js-feed-post').count();await more.first().click();await page.waitForTimeout(600);assert(await page.locator('.js-feed-container>.js-feed-post').count()>old,'show more failed');(await inspect()).forEach(card=>assert(card.right<=width+1&&card.ratios.every(r=>r>=4.5),'loaded card is broken'));}
+        if(await more.count()){const old=await page.locator('.js-feed-container>.js-feed-post').count();await more.first().click();await page.waitForFunction(old=>document.querySelectorAll('.js-feed-container>.js-feed-post').length>old,old,{timeout:10000});assert(await page.locator('.js-feed-container>.js-feed-post').count()>old,'show more failed');(await inspect()).forEach(card=>assert(card.right<=width+1&&card.ratios.every(r=>r>=4.5),'loaded card is broken'));}
         await page.locator('.js-feed-post').nth(1).scrollIntoViewIfNeeded();await page.screenshot({path:`output/playwright/audit-articles-${colorScheme}-393.png`});
       }
       results.push({path,width,colorScheme,cards:cards.length,layout:'PASS',contrast:'PASS'});
