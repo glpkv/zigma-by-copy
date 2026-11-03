@@ -1,18 +1,32 @@
-name: zigma-clinic
-region: fra
-static_sites:
-  - name: web
-    environment_slug: node-js
-    git:
-      repo_clone_url: https://github.com/glpkv/zigma-by-copy.git
-      branch: main
-    source_dir: public
-    output_dir: .
-    index_document: index.html
-ingress:
-  rules:
-    - component:
-        name: web
-      match:
-        path:
-          prefix: /
+{
+  "name": "zigma-clinic",
+  "region": "fra",
+  "static_sites": [
+    {
+      "name": "web",
+      "environment_slug": "html",
+      "git": {
+        "repo_clone_url": "https://github.com/glpkv/zigma-by-copy.git",
+        "branch": "main"
+      },
+      "source_dir": "public",
+      "build_command": "work=$(mktemp -d) && cp -R . \"$work/\" && mkdir -p zigma-static && cp -R \"$work/.\" zigma-static/ && find zigma-static -name '*.html' -exec sed -i 's|connect-src '\"'\"'self'\"'\"'|connect-src '\"'\"'self'\"'\"' https://zigma-clinic.jikoku.workers.dev|g;s|local-only.js?v=2|local-only.js?v=3|g' {} +",
+      "output_dir": "zigma-static",
+      "index_document": "index.html"
+    }
+  ],
+  "ingress": {
+    "rules": [
+      {
+        "component": {
+          "name": "web"
+        },
+        "match": {
+          "path": {
+            "prefix": "/"
+          }
+        }
+      }
+    ]
+  }
+}
