@@ -187,3 +187,4 @@ print('Complete:',len(pages),'pages,',len(assets),'assets,',len(failures),'failu
 import sys
 subprocess.run([sys.executable,str(ROOT/"scripts/prepare-site.py")],check=True)
 subprocess.run([sys.executable,str(ROOT/"scripts/fix-phone.py")],check=True)
+subprocess.run([sys.executable,str(ROOT/"scripts/finish-site.py")],check=True)

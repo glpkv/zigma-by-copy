@@ -1,6 +1,16 @@
 /* UI repairs do not send appointment data or load third-party form services. */
 (() => {
   const ready = () => {
+    const menuButton=document.querySelector('.site-mobile-header__toggle');
+    const mobileMenu=document.getElementById('site-mobile-menu');
+    const closeMenu=()=>{if(mobileMenu)mobileMenu.hidden=true;if(menuButton){menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Открыть меню');}};
+    menuButton?.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';mobileMenu.hidden=!open;menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');});
+    mobileMenu?.addEventListener('click',event=>{
+      const link=event.target.closest('a');if(!link)return;closeMenu();
+      const url=new URL(link.href,location.href),target=url.hash&&document.getElementById(url.hash.slice(1));
+      if(url.origin===location.origin&&url.pathname===location.pathname&&target){event.preventDefault();event.stopPropagation();target.scrollIntoView({behavior:'instant',block:'start'});history.pushState(null,'',url.href);}
+    });
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
     let lastTrigger;
     const close = dialog => { dialog.close(); lastTrigger?.focus(); };
     document.addEventListener('click', event => {
