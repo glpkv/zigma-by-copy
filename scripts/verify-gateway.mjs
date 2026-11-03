@@ -36,5 +36,8 @@ try{
  assert.equal(forwarded.url,'https://zigma-clinic-copy.afootdate1.chatgpt.site/api/appointments');
  assert.equal(forwarded.options.headers.get('Origin'),'https://zigma-clinic-copy.afootdate1.chatgpt.site');
  const root=await (await gateway.fetch(new Request('https://zigma-clinic.jikoku.workers.dev/'))).text();assert.match(root,/src="\/local-only.js\?v=2"/);
+ const preflight=new Request('https://zigma-clinic.jikoku.workers.dev/api/appointments',{method:'OPTIONS',headers:{Origin:'https://zigma-clinic-o7p3j.ondigitalocean.app'}});
+ const allowed=await gateway.fetch(preflight);assert.equal(allowed.status,204);assert.equal(allowed.headers.get('Access-Control-Allow-Origin'),'https://zigma-clinic-o7p3j.ondigitalocean.app');
+ assert.equal((await gateway.fetch(new Request(preflight,{headers:{Origin:'https://evil.invalid'}}))).status,403);
  console.log('PASS: subpath HTML, CSS, JavaScript, feeds, canonical URLs, redirects, legacy URL and POST origin/body limits.');
 }finally{globalThis.fetch=originalFetch;}

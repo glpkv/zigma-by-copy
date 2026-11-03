@@ -2,8 +2,10 @@
 (() => {
   'use strict';
   const originalFetch = window.fetch;
+  const staticHost=location.hostname?.endsWith('.ondigitalocean.app')||['gleblapkovsky.com','www.gleblapkovsky.com'].includes(location.hostname);
+  const intakeEndpoint=staticHost?'https://zigma-clinic.jikoku.workers.dev/api/appointments':'/api/appointments';
   let intakeEnabled = false;
-  originalFetch.call(window, '/api/appointments').then(response => response.ok ? response.json() : null)
+  originalFetch.call(window, intakeEndpoint).then(response => response.ok ? response.json() : null)
     .then(config => { intakeEnabled = config?.enabled === true; }).catch(() => {});
   const message = 'Демонстрационная версия: запись пока отключена. Данные не отправлены.';
   function showNotice(form) {
@@ -41,7 +43,7 @@
     notice.textContent = 'Сохраняем заявку…';
     const submit=form.querySelector('button[type="submit"],input[type="submit"],.t-submit');if(submit)submit.disabled=true;
     try {
-      const response = await originalFetch.call(window, '/api/appointments', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname,selection})});
+      const response = await originalFetch.call(window, intakeEndpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname,selection})});
       const result = await response.json();
       if (!response.ok || result.ok !== true) throw new Error('SAVE_FAILED');
       notice.textContent = 'Заявка сохранена. Администратор свяжется с вами, уточнит стоимость и согласует время. Это запрос на обратный звонок, время приёма ещё не забронировано.';

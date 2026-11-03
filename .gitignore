@@ -14,3 +14,5 @@ dist/
 .openai/execution-profile.json
 
 .vinext/
+
+deployment/
