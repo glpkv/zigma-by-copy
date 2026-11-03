@@ -37,7 +37,8 @@ manifest_path.write_text(json.dumps(manifest,indent=2))
 ROUTES={'Терапия':'/therapy','Лечение кариеса':'/therapy','Лечение каналов':'/therapy','Профгигиена':'/therapy','Отбеливание':'/otbelivanie','Профессиональное отбеливание':'/otbelivanie','Домашнее отбеливание':'/otbelivanie','Имплантация':'/implantation/','Тотальная имплантация':'/implantation/','Allon4':'/implantation/','Allon6':'/implantation/','Зубы за один день':'/implantation/','Костная пластика':'/implantation/bone-grafting/'}
 counts={'removed_branding':0,'repaired_booking_links':0,'repaired_navigation':0,'removed_motion_attributes':0}
 for p in DIST.rglob('*.html'):
-    soup=BeautifulSoup(p.read_text(),'html.parser')
+    text=p.read_text().replace('Red Cat Digital','hi@gleblapkovsky.com').replace('https://t.me/redcat_digital','mailto:hi@gleblapkovsky.com').replace('разработано студией','Разработчик')
+    soup=BeautifulSoup(text,'html.parser')
     for comment in soup.find_all(string=lambda value:isinstance(value,Comment)):
         if 'Tilda copyright' in comment:comment.extract()
     for node in soup.select('#tildacopy,.t-tildalabel'):
