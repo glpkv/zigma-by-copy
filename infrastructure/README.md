@@ -1,22 +1,21 @@
-# Public recovery entry point
+# Production hosting
 
-Primary visitor URL: https://gleblapkovsky.com/zigma/
-Reserve URL: https://zigma-clinic.jikoku.workers.dev/
+Canonical site: https://zigma.gleblapkovsky.com
 
-Cloudflare account: `64859144c9610e2e1b1bc6d57406dfc8`, Worker: `zigma-clinic`.
-The original `chatgpt.site` hostname can be blocked by the shared hosting security layer for some visitor networks. This separate entry point retrieves the existing public site server-side and preserves the appointment endpoint. It does not forward visitor cookies or IP headers; same-origin redirects stay on the new hostname. POST is restricted to the appointment endpoint and checks the new site's origin before forwarding.
+DigitalOcean App Platform `zigma-clinic` runs the dependency-free Node server in `Dockerfile`.
+It serves `public/` and the same-origin `/api/appointments` endpoint. Motion is served from the
+same application. The private table remains `glpkv/zigma-appointments/appointments.csv`.
 
-Origin: https://zigma-clinic-copy.afootdate1.chatgpt.site/
-The origin must remain published. This is a recovery gateway, not an independent copy of the asset storage.
+Every push to `main` triggers `.github/workflows/deploy.yml`, which deploys the latest source
+and waits for ACTIVE. GitHub Actions stores `DIGITALOCEAN_ACCESS_TOKEN`; DigitalOcean stores
+`APPOINTMENTS_GITHUB_TOKEN` as a runtime SECRET. Never copy either into source or build output.
+The checked-in `.do/app.yaml` intentionally excludes runtime secrets; preserve configured
+secrets when applying future specification changes.
 
-The Worker handles only `gleblapkovsky.com/zigma` and `gleblapkovsky.com/zigma/*` on the custom domain. The existing portfolio remains on DigitalOcean. The apex CNAME keeps its original destination and uses Cloudflare proxying so the two path-specific routes can run. Mail records are unchanged.
+Cloudflare proxies only the DNS CNAME for the clinic hostname to the DigitalOcean ingress.
+The clinic hostname requires no Worker route. Preserve all apex, www, VPN and mail records.
+The old `zigma-clinic` recovery Worker is retained as a rollback resource until migration QA.
+Its source and build scripts are historical and are not used by the production Docker image.
 
-The gateway rewrites site-relative HTML, CSS, JavaScript and feed paths under `/zigma/`, preserves redirects within that prefix, and publishes canonical URLs on the custom domain. Appointment POST requests require the visitor's same-origin header and a bounded JSON body before forwarding to the original server.
-
-Build with `node scripts/build-gateway.mjs`; run `node scripts/verify-gateway.mjs`. Deploy the resulting `.cache/gateway-worker.mjs` as the Worker's `index.js` ES module with compatibility date `2026-11-03`.
-
-The gateway serves `public/motion.css` and `public/motion.js` and injects their tags. Motion uses the Jikoku reference's gentle easing as inspiration, with original code: one-time text/photo reveals, a small hero zoom, hover feedback and a scroll progress line. It animates only opacity, translate, scale and clipping; it leaves layout dimensions and scroll position alone, and respects `prefers-reduced-motion`. Content stays visible if JavaScript or animation support is unavailable.
-
-Motion update: stronger text/photo reveals, rounded rectangular photographs (hero carriers excluded), pointer-responsive button hover, and two seamless photo conveyors at 15/22 px per second. Each line pauses while its photo is hovered and resumes on leave; the hovered tile scales to 1.055. Responsive row overlays retain the original gallery height and row positions; reduced-motion restores the original static photos. Motion asset query versions invalidate browser caches.
-
-Follow-up: text/photo reveals now animate opacity only; header content is excluded from individual reveals and its surface fades as one unit. Buttons have only subtle shadow/brightness feedback. Service card hover enlarges the image inside its rounded frame; conveyor cycles use eight distinct sources with no adjacent duplicates, including the loop boundary. Desktop header coordinates were compared against zigma.by at 1280px and match.
+Validation: `node scripts/verify-intake.mjs`, `node scripts/verify-estimate.mjs`,
+`node scripts/verify-motion.mjs`. Preview: `node infrastructure/server.mjs` (port 8080).
