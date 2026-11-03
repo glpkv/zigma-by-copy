@@ -1,0 +1,26 @@
+name: Deploy DigitalOcean
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: zigma-production
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy latest main
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $DIGITALOCEAN_ACCESS_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data '{"force_build":true}' \
+            https://api.digitalocean.com/v2/apps/ae6b9098-c411-4c86-9451-92fe455391d7/deployments \
+            --output /tmp/deployment.json
+          python3 -c 'import json; print("Deployment:",json.load(open("/tmp/deployment.json"))["deployment"]["id"])'
