@@ -95,7 +95,7 @@
     if(!('IntersectionObserver' in window)||!Element.prototype.animate)return;
     conveyors();
 
-    let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{document.querySelectorAll('.zigma-photo-row').forEach(n=>n.remove());document.querySelectorAll('.zigma-photo-source').forEach(n=>n.classList.remove('zigma-photo-source'));conveyors();},250);},{passive:true});
+    let resizeTimer,lastViewportWidth=document.documentElement.clientWidth;window.addEventListener('resize',()=>{const nextWidth=document.documentElement.clientWidth;if(Math.abs(nextWidth-lastViewportWidth)<2)return;lastViewportWidth=nextWidth;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{document.querySelectorAll('.zigma-photo-row').forEach(n=>n.remove());document.querySelectorAll('.zigma-photo-source').forEach(n=>n.classList.remove('zigma-photo-source'));conveyors();},250);},{passive:true});
     progress=document.createElement('div');progress.className='zigma-scroll-progress';progress.setAttribute('aria-hidden','true');document.body.appendChild(progress);
     observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){observer.unobserve(entry.target);play(entry.target,entry.target.dataset.zigmaMotion);}},{threshold:.12,rootMargin:'0px 0px -65px 0px'});
     collect(document);window.addEventListener('load',()=>{prepareHeaders();decorate();cards();collect(document);conveyors();},{once:true});
