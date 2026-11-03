@@ -7,21 +7,29 @@
 .zigma-photo-track>.zigma-photo{flex:0 0 var(--photo-width);width:var(--photo-width);height:100%;background-size:cover;background-position:center;transition:scale .7s var(--zigma-motion-ease),filter .7s var(--zigma-motion-ease);transform-origin:center}
 .zigma-photo-source{visibility:hidden!important}
 @keyframes zigma-conveyor{from{transform:translateX(var(--photo-start))}to{transform:translateX(calc(var(--photo-start) - var(--photo-period)))}}
-@media(prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine){
- .zigma-motion-button{transition:scale .38s cubic-bezier(.2,1.45,.4,1),box-shadow .3s ease,filter .3s ease!important}
- .zigma-motion-button:hover{scale:1.015;box-shadow:0 4px 14px #00000018;filter:brightness(1.035)}
- .zigma-motion-button:active{scale:.995;filter:brightness(.97)}
- .zigma-card-photo:before{transition:transform .7s var(--zigma-motion-ease)}
- .zigma-card-photo.zigma-card-active:before,.zigma-card-photo:hover:before{transform:scale(1.045)}
- .t-feed__post .js-feed-post-image{transition:scale .7s var(--zigma-motion-ease)}
- .t-feed__post:hover .js-feed-post-image,.t-feed__post:focus-within .js-feed-post-image{scale:1.035}
- .zigma-photo-row:has(.zigma-photo:hover) .zigma-photo-track,.zigma-photo-row:focus-within .zigma-photo-track{animation-play-state:paused}
- .zigma-photo-track>.zigma-photo:hover{scale:1.055;z-index:3;filter:brightness(1.06)}
+@media(hover:hover) and (pointer:fine){
+ html[data-site-motion="on"] :is(.zigma-motion-button,.zigma-helper-launch,.zigma-assistant__submit){transition:scale .38s cubic-bezier(.2,1.45,.4,1),box-shadow .3s ease,filter .3s ease!important}
+ html[data-site-motion="on"] :is(.zigma-motion-button,.zigma-helper-launch,.zigma-assistant__submit):hover{scale:1.025;box-shadow:0 4px 14px #00000018;filter:brightness(1.035)}
+ html[data-site-motion="on"] :is(.zigma-motion-button,.zigma-helper-launch,.zigma-assistant__submit):active{scale:.995;filter:brightness(.97)}
+ html[data-site-motion="on"] .zigma-card-photo:before{transition:transform .7s var(--zigma-motion-ease)}
+ html[data-site-motion="on"] .zigma-card-photo.zigma-card-active:before,html[data-site-motion="on"] .zigma-card-photo:hover:before{transform:scale(1.045)}
+ html[data-site-motion="on"] .t-feed__post .js-feed-post-image{transition:scale .7s var(--zigma-motion-ease)}
+ html[data-site-motion="on"] .t-feed__post:hover .js-feed-post-image,html[data-site-motion="on"] .t-feed__post:focus-within .js-feed-post-image{scale:1.035}
+ html[data-site-motion="on"] .zigma-photo-row:has(.zigma-photo:hover) .zigma-photo-track,html[data-site-motion="on"] .zigma-photo-row:focus-within .zigma-photo-track{animation-play-state:paused}
+ html[data-site-motion="on"] .zigma-photo-track>.zigma-photo:hover{scale:1.055;z-index:3;filter:brightness(1.06)}
 }
 @media(max-width:959px){.zigma-photo{border-radius:9px!important}}
-@media(prefers-reduced-motion:reduce){.zigma-scroll-progress{display:none}.zigma-motion-button,.zigma-photo{transition:none!important}.zigma-photo-row{display:none}.zigma-photo-source{visibility:visible!important}}
+html[data-site-motion="off"] .zigma-scroll-progress{display:none}html[data-site-motion="off"] .zigma-motion-button,html[data-site-motion="off"] .zigma-photo{transition:none!important}html[data-site-motion="off"] .zigma-photo-row{display:none}html[data-site-motion="off"] .zigma-photo-source{visibility:visible!important}
 
 .zigma-card-photo{position:relative;background-image:none!important}
 .zigma-card-photo:before{content:"";position:absolute;inset:0;background-image:var(--zigma-card-image);background-size:cover;background-position:center;border-radius:inherit;pointer-events:none}
-@media(prefers-reduced-motion:no-preference){.zigma-header-surface,.site-mobile-header{animation:zigma-header-reveal .7s var(--zigma-motion-ease) both}}
+html[data-site-motion="on"] .zigma-header-surface,html[data-site-motion="on"] .site-mobile-header{animation:zigma-header-reveal 1s var(--zigma-motion-ease) both}
 @keyframes zigma-header-reveal{from{opacity:.4;clip-path:inset(0 0 8px 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+
+.zigma-assistant #helper-title:focus,.zigma-assistant #helper-title:focus-visible{outline:none!important;box-shadow:none!important}
+/* Explicit visitor motion preference takes precedence over the legacy global reset. */
+html[data-site-motion="on"] .zigma-photo-track{animation-duration:var(--photo-duration)!important;animation-iteration-count:infinite!important}
+html[data-site-motion="on"] :is(.zigma-motion-button,.zigma-helper-launch,.zigma-assistant__submit){transition-duration:.38s,.3s,.3s!important}
+
+html[data-site-motion="on"] .zigma-card-photo:before,html[data-site-motion="on"] .js-feed-post-image,html[data-site-motion="on"] .zigma-photo-track>.zigma-photo{transition-duration:.7s!important}
+html[data-site-motion="on"] :is(.zigma-header-surface,.site-mobile-header){animation-duration:1s!important}

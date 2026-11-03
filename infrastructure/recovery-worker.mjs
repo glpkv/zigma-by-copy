@@ -2,7 +2,7 @@ const ORIGIN='https://zigma-clinic-copy.afootdate1.chatgpt.site';
 const PRIMARY='https://gleblapkovsky.com/zigma';
 const MOTION_CSS=__MOTION_CSS__;
 const MOTION_JS=__MOTION_JS__;
-const KNOWN_ROOT=/(["'`(]\s*)\/(?=(?:assets|feeds|vendor|api|about|therapy|otbelivanie|implantation|privacy-policy|tpost|page\d+(?:\.html)?|service-catalog\.json|service-assistant\.(?:js|css)|local-only\.js|phone-input\.js|site-enhancements\.(?:js|css)|theme\.css|responsive\.css)(?:[\/"'`?#)\s]|$))/g;
+const KNOWN_ROOT=/(["'`(]\s*)\/(?=(?:assets|feeds|vendor|api|about|therapy|otbelivanie|implantation|privacy-policy|tpost|page\d+(?:\.html)?|motion\.(?:js|css)|service-catalog\.json|service-assistant\.(?:js|css)|local-only\.js|phone-input\.js|site-enhancements\.(?:js|css)|theme\.css|responsive\.css)(?:[\/"'`?#)\s]|$))/g;
 function rewritePaths(text,base,html=false){
  if(base){
   if(html)text=text.replace(/\b(href|src|data-original|data-img-zoom-url|action|poster|content)=(['"])\/(?!\/)/gi,(_,name,quote)=>name+'='+quote+base+'/');
@@ -46,7 +46,8 @@ export default {async fetch(request){
    text=text.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi,tag=>tag.replace(/href=["'][^"']*["']/i,'href="'+canonical+'"'))
     .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi,tag=>tag.replace(/content=["'][^"']*["']/i,'content="'+canonical+'"'));
    const canonicalTag=/<link\b[^>]*rel=["']canonical["']/i.test(text)?'':`<link href="${canonical}" rel="canonical">`;
-   text=text.replace('</head>',`${canonicalTag}<link rel="stylesheet" href="${base}/motion.css?v=5"><script defer src="${base}/motion.js?v=5"></script></head>`);
+   const motionTags=text.includes('/motion.js?')?'':`<link rel="stylesheet" href="${base}/motion.css?v=6"><script defer src="${base}/motion.js?v=6"></script>`;
+   text=text.replace('</head>',`${canonicalTag}${motionTags}</head>`);
   }
   output.delete('Content-Length');output.delete('Content-Encoding');output.delete('ETag');
   return new Response(text,{status:response.status,headers:output});

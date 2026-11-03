@@ -19,7 +19,7 @@ try{
  assert.equal(redirect.status,308);assert.equal(redirect.headers.get('Location'),'https://gleblapkovsky.com/zigma/');
  const htmlResponse=await gateway.fetch(request('/zigma/'));
  const html=await htmlResponse.text();
- assert.match(html,/href="\/zigma\/motion.css\?v=5"/);
+ assert.match(html,/href="\/zigma\/motion.css\?v=6"/);assert.equal((html.match(/<script[^>]*motion\.js/g)||[]).length,1);
  assert.match(html,/href="https:\/\/gleblapkovsky.com\/zigma\/"[^>]*rel="canonical"/);
  assert.match(html,/src="\/zigma\/local-only.js\?v=2"/);
  assert.match(html,/href="\/zigma\/#about"/);

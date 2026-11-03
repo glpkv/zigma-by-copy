@@ -37,3 +37,5 @@ body:has(dialog[open])>.zigma-helper-launch,body:has(dialog[open])>.zigma-mobile
 }
 @media(max-width:479px){.zigma-assistant{padding:25px 20px;max-width:calc(100% - 20px);max-height:calc(100dvh - 20px);border-radius:18px}.zigma-assistant h2{font-size:25px}.zigma-assistant__fields{grid-template-columns:1fr;gap:12px}.zigma-assistant__option{padding:12px}.zigma-assistant__actions{gap:8px}.zigma-assistant__actions button{padding:13px 18px}}
 @media(prefers-reduced-motion:no-preference) and (hover:hover) and (pointer:fine){.zigma-helper-launch,.zigma-assistant__submit{transition:box-shadow .25s ease,scale .35s cubic-bezier(.2,1.5,.4,1)}.zigma-helper-launch:hover,.zigma-assistant__submit:hover{scale:1.015;box-shadow:0 7px 18px #0002}}
+
+.zigma-assistant #helper-title:focus,.zigma-assistant #helper-title:focus-visible{outline:none!important;box-shadow:none!important}

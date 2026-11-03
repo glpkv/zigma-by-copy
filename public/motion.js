@@ -1,6 +1,10 @@
 (() => {
   'use strict';
-  const preference=matchMedia('(prefers-reduced-motion: reduce)');
+  const systemPreference=matchMedia('(prefers-reduced-motion: reduce)');
+  let savedMotion;
+  try {savedMotion=localStorage.getItem('zigma-motion');const requested=new URL(location.href).searchParams.get('motion');if(requested==='on'||requested==='off'){savedMotion=requested;localStorage.setItem('zigma-motion',requested);}} catch {}
+  const preference={get matches(){return savedMotion==='off'||(savedMotion!=='on'&&systemPreference.matches);},addEventListener:(type,callback)=>systemPreference.addEventListener(type,callback)};
+  document.documentElement.dataset.siteMotion=preference.matches?'off':'on';
   const ease='cubic-bezier(.16,1,.3,1)';
   const excluded='.zigma-header-surface,.uc-menu-ap,#rec375959943,#rec774364427,header,footer,#t-header,#t-footer,.site-mobile-header,.site-mobile-footer,form,dialog,.t-popup,.t450,.clinic-map';
   const textSelector='.tn-elem[data-elem-type="text"]>.tn-atom,.t-title,.t-descr,.t-text,.t-feed__title,.t-feed__descr';
@@ -9,7 +13,7 @@
   function play(node,kind) {
     if(preference.matches||node.dataset.zigmaSeen)return;
     node.dataset.zigmaSeen='true';
-    const animation=node.animate([{opacity:.55},{opacity:1}],{duration:650,easing:ease,fill:'none'});
+    const animation=node.animate([{opacity:.12},{opacity:1}],{duration:1050,easing:ease,fill:'none'});
     active.add(animation);animation.finished.catch(()=>{}).finally(()=>active.delete(animation));
   }
   function collect(root) {
@@ -102,7 +106,7 @@
     window.addEventListener('scroll',scheduleProgress,{passive:true});window.addEventListener('resize',scheduleProgress,{passive:true});scheduleProgress();
 
   }
-  preference.addEventListener('change',()=>{if(preference.matches){observer?.disconnect();for(const animation of active)animation.cancel();active.clear();progress?.remove();}});
+  preference.addEventListener('change',()=>{document.documentElement.dataset.siteMotion=preference.matches?'off':'on';if(preference.matches){observer?.disconnect();for(const animation of active)animation.cancel();active.clear();progress?.remove();}});
   const ready=()=>requestAnimationFrame(()=>requestAnimationFrame(start));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
