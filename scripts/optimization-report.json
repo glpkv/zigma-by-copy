@@ -1,0 +1,322 @@
+{
+  "asset_bytes_before": 18926031,
+  "asset_bytes_after": 5606945,
+  "asset_reduction_percent": 70.4,
+  "optimized_images": [
+    {
+      "source": "3b4c3b344c70a3cd4c99-Rectangle_378.jpg",
+      "before": 28063,
+      "after": 15854
+    },
+    {
+      "source": "b5c15b008e236ab5daf0-2149164290_1.jpg",
+      "before": 46106,
+      "after": 35836
+    },
+    {
+      "source": "53a10de1779e921381c0-photo_1.jpeg",
+      "before": 258206,
+      "after": 69822
+    },
+    {
+      "source": "07744015ba9ac5076456-image.png",
+      "before": 913695,
+      "after": 97036
+    },
+    {
+      "source": "eeff2f6bfe70e97d230e-room-7TOLFyu1Dp4-uns.jpg",
+      "before": 166005,
+      "after": 113444
+    },
+    {
+      "source": "fb779e36755fcb7cdb14-2.jpg",
+      "before": 49696,
+      "after": 8458
+    },
+    {
+      "source": "3a15732462358cf72904-a260a133ff5703594f3c.jpeg",
+      "before": 72773,
+      "after": 42522
+    },
+    {
+      "source": "b35fac91ab2e38af0381-64.png",
+      "before": 631556,
+      "after": 126188
+    },
+    {
+      "source": "c9b9b013d78e774dc187-47.png",
+      "before": 555483,
+      "after": 71006
+    },
+    {
+      "source": "addfebaeeb19f599ae5a-bg.jpg",
+      "before": 143838,
+      "after": 81854
+    },
+    {
+      "source": "a7193b6637a13197cd3e-3.jpeg",
+      "before": 43318,
+      "after": 22264
+    },
+    {
+      "source": "36ea2076e72d528d44c7-veneers.jpeg",
+      "before": 140818,
+      "after": 69950
+    },
+    {
+      "source": "d813314b6f54e4ebc0d5-photo.jpg",
+      "before": 64856,
+      "after": 19628
+    },
+    {
+      "source": "50773943694d623d5758-1.jpeg",
+      "before": 160965,
+      "after": 94968
+    },
+    {
+      "source": "9312eb5fae4daaf0e338-Rectangle_380.jpg",
+      "before": 84937,
+      "after": 54814
+    },
+    {
+      "source": "f1f3e349a40eb38b2a9c-Rectangle_376.jpg",
+      "before": 72286,
+      "after": 31454
+    },
+    {
+      "source": "08f344d6d2e774fcae86-noroot.png",
+      "before": 57734,
+      "after": 5406
+    },
+    {
+      "source": "bc54bc1657a751cf3ac8-sedation.jpeg",
+      "before": 133665,
+      "after": 74436
+    },
+    {
+      "source": "9b59291ee2ba0698ac67-img1.jpg",
+      "before": 115892,
+      "after": 56916
+    },
+    {
+      "source": "0f5f4dd697dd1e371a71-123.jpg",
+      "before": 168246,
+      "after": 82696
+    },
+    {
+      "source": "52613758267d8050aaa8-1.png",
+      "before": 142394,
+      "after": 25558
+    },
+    {
+      "source": "5dd8c3bd8cba8189766d-image.png",
+      "before": 1549914,
+      "after": 41380
+    },
+    {
+      "source": "a04fe8a6e1e75510e455-40.png",
+      "before": 585749,
+      "after": 79044
+    },
+    {
+      "source": "88d7d7e7c6fb3ad50a4b-2.jpg",
+      "before": 113849,
+      "after": 63704
+    },
+    {
+      "source": "ddd243a7165a99bc14ce-3.jpg",
+      "before": 44025,
+      "after": 10042
+    },
+    {
+      "source": "4d29cc7703589ed281d9-room-5LRUg3IwNpI-uns.jpg",
+      "before": 227405,
+      "after": 167354
+    },
+    {
+      "source": "620751bf9ec9a59d8523-Rectangle_375.jpg",
+      "before": 41482,
+      "after": 25626
+    },
+    {
+      "source": "5893ca3d0285519b3920-45.png",
+      "before": 527550,
+      "after": 65688
+    },
+    {
+      "source": "a8bcbd08c39a1afb9335-65398.jpg",
+      "before": 376141,
+      "after": 32236
+    },
+    {
+      "source": "e59ba42b366e9e11c637-1.jpeg",
+      "before": 160965,
+      "after": 94968
+    },
+    {
+      "source": "899aa94c624e8da2500a--2.jpg",
+      "before": 82992,
+      "after": 27320
+    },
+    {
+      "source": "3eabd01a35a1f43d9d3d-photo.jpg",
+      "before": 81890,
+      "after": 29440
+    },
+    {
+      "source": "1a0c186964b067242f4c-65.png",
+      "before": 605700,
+      "after": 140794
+    },
+    {
+      "source": "016516a9d41fa1f179e9-ava.jpg",
+      "before": 27885,
+      "after": 19460
+    },
+    {
+      "source": "83403855b03da543c9b8-__2024-07-16__012825.png",
+      "before": 273287,
+      "after": 35356
+    },
+    {
+      "source": "f5aebe179e8d29e0410a-Rectangle_379.jpg",
+      "before": 108930,
+      "after": 53664
+    },
+    {
+      "source": "e34c1bddcb457913692d-57.png",
+      "before": 411094,
+      "after": 22684
+    },
+    {
+      "source": "275beb07f1688cd480dd-team.jpg",
+      "before": 155844,
+      "after": 87848
+    },
+    {
+      "source": "a8414e7435155d103bd4-1.jpg",
+      "before": 29883,
+      "after": 4486
+    },
+    {
+      "source": "700e371c58a018952404-21.jpg",
+      "before": 134937,
+      "after": 7184
+    },
+    {
+      "source": "8e82fb814957104647fd-img.jpg",
+      "before": 101483,
+      "after": 53712
+    },
+    {
+      "source": "b72ee5321694bf2cd2b3-room-CvITb1xAj4I-uns.jpg",
+      "before": 144276,
+      "after": 97036
+    },
+    {
+      "source": "76fa427384bf67dbd92c-1.jpeg",
+      "before": 160965,
+      "after": 94968
+    },
+    {
+      "source": "99e8bfcc8d753737972a-implant.jpeg",
+      "before": 157852,
+      "after": 94400
+    },
+    {
+      "source": "4452d6097451dd5fa4ea-1.jpg",
+      "before": 141969,
+      "after": 81330
+    },
+    {
+      "source": "c8cd937efa44be6cbfd5-65398.jpg",
+      "before": 376141,
+      "after": 32236
+    },
+    {
+      "source": "80cfe9d31b5fcb000ea8-39.png",
+      "before": 571393,
+      "after": 85670
+    },
+    {
+      "source": "65ea8080354b6ba2f1d3-3.jpg",
+      "before": 99533,
+      "after": 46412
+    },
+    {
+      "source": "8bddd2588dac337991a0-53.png",
+      "before": 604948,
+      "after": 115332
+    },
+    {
+      "source": "13ac38d7ddf14df46393-55.png",
+      "before": 575953,
+      "after": 100354
+    },
+    {
+      "source": "734ae796efc2856720a7-2149164290_1.jpg",
+      "before": 46106,
+      "after": 35836
+    },
+    {
+      "source": "a9a2f8926da5e2a3fcab-photo.jpeg",
+      "before": 258206,
+      "after": 69822
+    },
+    {
+      "source": "45fcd55c56ce77de2430-photo.jpg",
+      "before": 102411,
+      "after": 57542
+    },
+    {
+      "source": "a5ad5f06efce6d47ffa4-5_6106.jpg",
+      "before": 101301,
+      "after": 6038
+    },
+    {
+      "source": "f1640f62f321f2728b41-image.png",
+      "before": 1601389,
+      "after": 167354
+    },
+    {
+      "source": "0de7bd5fb638510b6e71-59.png",
+      "before": 560407,
+      "after": 83672
+    },
+    {
+      "source": "2efea13a5e42af486aae-image-04-04-24-09-45.png",
+      "before": 199615,
+      "after": 13926
+    },
+    {
+      "source": "b5630d11d0f26e0f526e-Rectangle_373.jpg",
+      "before": 60508,
+      "after": 39612
+    },
+    {
+      "source": "b102d78eac646022de3a-3.jpeg",
+      "before": 43318,
+      "after": 22264
+    },
+    {
+      "source": "68137f183223c67841ec-img.jpg",
+      "before": 123538,
+      "after": 50332
+    },
+    {
+      "source": "c9793db62e21cc354ff1-__2024-07-16__132125.png",
+      "before": 692353,
+      "after": 61126
+    },
+    {
+      "source": "1624bfe72e1bcd9827b7-Rectangle_377.jpg",
+      "before": 26721,
+      "after": 18080
+    }
+  ],
+  "removed_branding": 17,
+  "repaired_booking_links": 36,
+  "repaired_navigation": 48,
+  "total_resources_after": 5784003,
+  "removed_motion_attributes": 1678
+}

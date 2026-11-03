@@ -182,3 +182,7 @@ if not failures:
 (ROOT/'scripts'/'asset-manifest.json').write_text(json.dumps(assets,indent=2))
 (ROOT/'scripts'/'mirror-report.json').write_text(json.dumps({'pages':len(pages),'assets':len(assets),'failed':failures,'page_failures':page_failures},indent=2))
 print('Complete:',len(pages),'pages,',len(assets),'assets,',len(failures),'failures',flush=True)
+
+# Apply publication fixes and asset compression after the fresh mirror is assembled.
+import sys
+subprocess.run([sys.executable,str(ROOT/"scripts/prepare-site.py")],check=True)
