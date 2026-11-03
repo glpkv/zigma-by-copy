@@ -21,3 +21,7 @@ html,body{overflow-x:clip} .t-records,.t-records_animated{opacity:1!important;tr
 @media(max-width:959px){.site-legacy-header{display:none!important}.site-carousel-toolbar{left:20px;top:28px}}
 @media(max-width:479px){.site-carousel-toolbar{left:max(16px,calc(50% - 155px));top:18px}.tn-elem:has(>.site-carousel-button):has(+.tn-elem>.site-carousel-button){margin-left:-6px}.tn-elem:has(>.site-carousel-button)+.tn-elem:has(>.site-carousel-button){margin-left:8px}}
 @media(min-width:960px){.site-carousel-toolbar{top:8px}}
+
+/* Show the actual Yandex organization pin and card, rather than a geocoded address. */
+.clinic-map__viewport>.clinic-map__frame{position:absolute;inset:0;display:block;width:100%;height:100%;border:0}
+.clinic-map__address strong a{color:inherit!important;text-decoration:none}.clinic-map__address strong a:hover{text-decoration:underline}

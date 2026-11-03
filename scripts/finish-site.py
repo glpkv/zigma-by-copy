@@ -140,8 +140,10 @@ for page in PUBLIC.rglob('*.html'):
             answer.string='Если вас интересует лечение под общим наркозом, уточните доступность этой услуги у администратора и обсудите свой запрос с врачом на консультации.'
     if not soup.select_one('script[src^="/interactions.js"]'):
         soup.body.append(soup.new_tag('script',src='/interactions.js?v=1',defer=''))
-    for stylesheet in soup.select('link[href="/site-enhancements.css"]'):
-        stylesheet['href']='/site-enhancements.css?v=2'
+    for stylesheet in soup.select('link[href^="/site-enhancements.css"]'):
+        stylesheet['href']='/site-enhancements.css?v=3'
+    for script in soup.select('script[src^="/site-enhancements.js"]'):
+        script['src']='/site-enhancements.js?v=2'
     page.write_text(str(soup))
 for file in (PUBLIC/'assets').glob('*.css'):file.write_text(transform_css(file.read_text()))
 palette_file.write_text(json.dumps(palette,indent=2))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Verify the mirrored routes, local resources and disabled form policy."""
-import json,re
+import gzip,json,re
 from pathlib import Path
 from urllib.parse import urlsplit,parse_qs
 from bs4 import BeautifulSoup
@@ -24,15 +24,17 @@ for route,filename in pages.items():
     if not policy or "form-action 'none'" not in policy['content']: errors.append(filename+': form policy missing')
     map_block=soup.select_one('#rec773898881')
     if map_block:
-        canvas=map_block.select_one('.clinic-map__canvas')
+        frame=map_block.select_one('iframe.clinic-map__frame')
         route_link=map_block.select_one('a.clinic-map__route')
-        if not canvas or (canvas.get('data-map-lat'),canvas.get('data-map-lng'))!=('53.886642','27.518189'):
-            errors.append(filename+': clinic map marker missing')
+        widget=urlsplit(frame.get('src','')) if frame else None
+        query=parse_qs(widget.query) if widget else {}
+        if not widget or widget.netloc!='yandex.by' or widget.path!='/map-widget/v1/' or query.get('ol')!=['biz'] or query.get('oid')!=['146604389627']:
+            errors.append(filename+': native Yandex clinic organization map missing')
         if not route_link:
             errors.append(filename+': route link missing')
         else:
             query=parse_qs(urlsplit(route_link['href']).query)
-            if query.get('mode')!=['routes'] or query.get('ruri')!=['~ymapsbm1://org?oid=146604389627']:
+            if query.get('mode')!=['routes'] or query.get('ruri')!=['~ymapsbm1://org?oid=146604389627'] or query.get('rtext')!=['~53.88664961,27.51818338']:
                 errors.append(filename+': route destination is not the clinic')
         if 't_appendYandexMap' in str(map_block): errors.append(filename+': broken API embed still present')
     for node in soup.select('script[src],link[href],img[src]'):
@@ -45,7 +47,9 @@ for route,filename in pages.items():
 # Check image URLs nested inside gallery JSON and inline styles too.
 for p in dist.rglob('*'):
     if p.is_file() and p.suffix in ('.html','.css','.js','.json'):
-        for resource in set(re.findall(r'/assets/[A-Za-z0-9._-]+',p.read_text())):
+        content=p.read_bytes()
+        if content.startswith(b'\x1f\x8b'): content=gzip.decompress(content)
+        for resource in set(re.findall(r'/assets/[A-Za-z0-9._-]+',content.decode('utf-8'))):
             if not (dist/resource.lstrip('/')).is_file(): errors.append(str(p.relative_to(dist))+': missing nested resource '+resource)
 for url,filename in assets.items():
     if not (dist/filename.lstrip('/')).is_file(): errors.append('missing asset '+url)
