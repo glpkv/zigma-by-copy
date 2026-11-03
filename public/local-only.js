@@ -2,8 +2,7 @@
 (() => {
   'use strict';
   const originalFetch = window.fetch;
-  const staticHost=location.hostname?.endsWith('.ondigitalocean.app')||['gleblapkovsky.com','www.gleblapkovsky.com'].includes(location.hostname);
-  const intakeEndpoint=staticHost?'https://zigma-clinic.jikoku.workers.dev/api/appointments':'/api/appointments';
+  const intakeEndpoint='/api/appointments';
   let intakeEnabled = false;
   originalFetch.call(window, intakeEndpoint).then(response => response.ok ? response.json() : null)
     .then(config => { intakeEnabled = config?.enabled === true; }).catch(() => {});

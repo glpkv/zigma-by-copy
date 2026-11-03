@@ -1,30 +1,40 @@
 {
   "name": "zigma-clinic",
   "region": "fra",
-  "static_sites": [
+  "services": [
     {
       "name": "web",
-      "environment_slug": "html",
-      "git": {
-        "repo_clone_url": "https://github.com/glpkv/zigma-by-copy.git",
-        "branch": "main"
+      "github": {
+        "repo": "glpkv/zigma-by-copy",
+        "branch": "main",
+        "deploy_on_push": true
       },
-      "source_dir": "public",
-      "build_command": "work=$(mktemp -d) && cp -R . \"$work/\" && mkdir -p zigma-static && cp -R \"$work/.\" zigma-static/ && find zigma-static -name '*.html' -exec sed -i 's|connect-src '\"'\"'self'\"'\"'|connect-src '\"'\"'self'\"'\"' https://zigma-clinic.jikoku.workers.dev|g;s|local-only.js?v=2|local-only.js?v=3|g' {} +",
-      "output_dir": "zigma-static",
-      "index_document": "index.html"
+      "dockerfile_path": "Dockerfile",
+      "source_dir": "/",
+      "http_port": 8080,
+      "instance_count": 1,
+      "instance_size_slug": "apps-s-1vcpu-0.5gb",
+      "health_check": {
+        "http_path": "/healthz"
+      }
+    }
+  ],
+  "domains": [
+    {
+      "domain": "zigma.gleblapkovsky.com",
+      "type": "PRIMARY"
     }
   ],
   "ingress": {
     "rules": [
       {
-        "component": {
-          "name": "web"
-        },
         "match": {
           "path": {
             "prefix": "/"
           }
+        },
+        "component": {
+          "name": "web"
         }
       }
     ]
