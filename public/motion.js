@@ -2,6 +2,7 @@
   'use strict';
   // Motion is enabled on every ordinary visit; URL flags and old saved values are ignored.
   document.documentElement.dataset.siteMotion='on';
+  const conveyorSelector='#rec374766006 .t396__artboard,#rec774519281 .t396__artboard,#rec774365843 .t396__artboard,#rec426887460 .t396__artboard,#rec765644844 .t396__artboard';
   const ease='cubic-bezier(.16,1,.3,1)';
   const excluded='.zigma-header-surface,.uc-menu-ap,#rec375959943,#rec774364427,header,footer,#t-header,#t-footer,.site-mobile-header,.site-mobile-footer,form,dialog,.t-popup,.t450,.clinic-map';
   const textSelector='.tn-elem[data-elem-type="text"]>.tn-atom,.t-title,.t-descr,.t-text,.t-feed__title,.t-feed__descr';
@@ -33,7 +34,7 @@
     });
   }
   function conveyors(){
-    document.querySelectorAll('#rec374766006 .t396__artboard').forEach(board=>{
+    document.querySelectorAll(conveyorSelector).forEach(board=>{
       if(board.querySelector('.zigma-photo-row'))return;
       const groups=new Map(),br=board.getBoundingClientRect(),ratio=br.width/board.offsetWidth;
       if(!ratio)return;
@@ -64,8 +65,7 @@
     });
   }
   function watchConveyors(){
-    const board=document.querySelector('#rec374766006 .t396__artboard');
-    if(!board)return;
+    document.querySelectorAll(conveyorSelector).forEach(board=>{
     let timer,geometry;
     const refresh=()=>{
       const bounds=board.getBoundingClientRect();
@@ -90,6 +90,7 @@
     window.addEventListener('load',schedule,{once:true});
     document.fonts?.ready.then(schedule);
     schedule();
+    });
   }
   function prepareHeaders(){
     document.querySelectorAll('.t396__artboard').forEach(board=>{

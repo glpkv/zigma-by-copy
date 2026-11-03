@@ -40,7 +40,7 @@ for route,filename in pages.items():
     for node in soup.select('script[src],link[href],img[src]'):
 
         link=node.get('src',node.get('href',''))
-        if link.startswith('/assets/') and not (dist/link.lstrip('/')).is_file(): errors.append(filename+': missing '+link)
+        if link.startswith('/assets/') and not (dist/urlsplit(link).path.lstrip('/')).is_file(): errors.append(filename+': missing '+link)
     for a in soup.select('a[href]'):
         href=a['href']
         if href.startswith('https://zigma.by'): errors.append(filename+': original site navigation')

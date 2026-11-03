@@ -33,5 +33,14 @@ async (page) => {
     return {source:source.getBoundingClientRect().width,tile:tile.getBoundingClientRect().width};
   });
   assert(Math.abs(dimensions.source-dimensions.tile)<1,'Conveyor dimensions stale after breakpoint resize');
-  return {results,breakpointDimensions:dimensions};
+  const innerPages=[];
+  for(const width of [393,1280])for(const path of ['/therapy/','/otbelivanie/','/implantation/']){
+    await page.setViewportSize({width,height:844});await page.goto(origin+path,{waitUntil:'domcontentloaded'});
+    await page.locator('.zigma-photo-row').first().scrollIntoViewIfNeeded();await page.waitForTimeout(600);
+    const sample=()=>page.locator('.zigma-photo-track').evaluateAll(nodes=>nodes.map(n=>n.firstElementChild.getBoundingClientRect().left));
+    const a=await sample();await page.waitForTimeout(800);const b=await sample();
+    assert(a.length===2&&b.length===2&&b.every((x,i)=>Math.abs(x-a[i])>3),path+': internal photo rows stopped');
+    innerPages.push({path,width,moved:b.map((x,i)=>Math.round(x-a[i]))});
+  }
+  return {results,breakpointDimensions:dimensions,innerPages};
 }

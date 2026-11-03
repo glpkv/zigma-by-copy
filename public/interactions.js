@@ -56,25 +56,72 @@
       viewport.setAttribute('role','region');viewport.setAttribute('aria-label','Список карточек — листайте стрелками или свайпом');
       record.querySelectorAll('.arrow-left,.arrow-right').forEach(node => {node.hidden = true;});
       const toolbar = document.createElement('div');toolbar.className = 'site-carousel-toolbar';
-      const move = direction => {
-        const width = innerWidth <= 480 ? 290 : innerWidth <= 640 ? 320 : innerWidth <= 1200 ? 370 : 450;
-        viewport.scrollBy({left:direction * width,behavior:reduced() ? 'instant' : 'smooth'});
+      // Use the real card outlines, deduplicating the legacy hover outline.
+      const seen=new Set();
+      const cards=[...viewport.querySelectorAll('.tn-elem[data-elem-type="shape"]')].filter(node=>{
+        const width=Number(node.dataset.fieldWidthValue),height=Number(node.dataset.fieldHeightValue),key=node.dataset.fieldLeftValue;
+        if(width<180||height<240||node.querySelector('[data-original]')||seen.has(key))return false;
+        seen.add(key);return true;
+      }).sort((a,b)=>Number(a.dataset.fieldLeftValue)-Number(b.dataset.fieldLeftValue));
+      if(!cards.length)continue;
+      cards.forEach(node=>node.classList.add('site-carousel-snap'));
+      const tail=document.createElement('div');tail.className='site-carousel-tail';tail.setAttribute('aria-hidden','true');viewport.appendChild(tail);
+      let targets=[],activeIndex=0,requestedIndex=null,timer,layoutTimer,signature='',layoutWidth=viewport.clientWidth,resizeIndex=null,resizeTimer;
+      const nearest=()=>targets.reduce((best,value,index)=>Math.abs(value-viewport.scrollLeft)<Math.abs(targets[best]-viewport.scrollLeft)?index:best,0);
+      const update=()=>{
+        const index=requestedIndex??resizeIndex??nearest();
+        prev.disabled=index===0;next.disabled=index===targets.length-1;
+        toolbar.hidden=targets.length<2;
+        viewport.dataset.carouselCount=String(cards.length);viewport.dataset.carouselIndex=String(index);
       };
-      const prev = button(-1,'Предыдущие карточки',() => move(-1)),next = button(1,'Следующие карточки',() => move(1));
+      const move=direction=>{
+        const index=Math.max(0,Math.min(targets.length-1,(requestedIndex??nearest())+direction));
+        requestedIndex=index;activeIndex=index;if(resizeIndex!==null)resizeIndex=index;
+        viewport.scrollTo({left:targets[index],behavior:reduced()?'instant':'smooth'});update();
+      };
+      const prev=button(-1,'Предыдущие карточки',()=>move(-1)),next=button(1,'Следующие карточки',()=>move(1));
       prev.setAttribute('aria-controls',contentId);next.setAttribute('aria-controls',contentId);
       toolbar.append(prev,next);record.querySelector('.t396__artboard')?.appendChild(toolbar);
-      const update = () => {
-        const max = viewport.scrollWidth - viewport.clientWidth;
-        prev.disabled = viewport.scrollLeft <= 2;next.disabled = viewport.scrollLeft >= max - 2;
-        toolbar.hidden = max <= 2;
+      const measure=()=>{
+        const bounds=viewport.getBoundingClientRect(),ratio=bounds.width/viewport.clientWidth;
+        if(!ratio)return;
+        const positions=cards.map(node=>{const r=node.getBoundingClientRect();return {left:(r.left-bounds.left)/ratio+viewport.scrollLeft,width:r.width/ratio};});
+        const nextSignature=JSON.stringify([viewport.clientWidth,...positions.map(p=>[Math.round(p.left),Math.round(p.width)])]);
+        if(nextSignature===signature)return;
+        signature=nextSignature;
+        const first=positions[0],last=positions.at(-1);
+        targets=positions.map(p=>Math.round(p.left-first.left));
+        viewport.style.scrollPaddingLeft=first.left+'px';
+        tail.style.left=(last.left+last.width)+'px';tail.style.width=Math.max(0,viewport.clientWidth-first.left-last.width)+'px';
+        // Ignore the original oversized spacer: it used to create a phantom fourth stop.
+        viewport.querySelectorAll('.tn-elem[data-elem-type="shape"]').forEach(node=>{
+          if(Number(node.dataset.fieldWidthValue)<100&&Number(node.dataset.fieldLeftValue)>=Number(cards.at(-1).dataset.fieldLeftValue)+Number(cards.at(-1).dataset.fieldWidthValue))node.hidden=true;
+        });
+        activeIndex=Math.min(resizeIndex??activeIndex,targets.length-1);requestedIndex=null;layoutWidth=viewport.clientWidth;
+        viewport.scrollTo({left:targets[activeIndex],behavior:'instant'});update();
+        // Tilda applies its responsive coordinates roughly 500 ms after resize.
+        if(resizeIndex!==null){clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{activeIndex=Math.min(resizeIndex,targets.length-1);resizeIndex=null;viewport.scrollTo({left:targets[activeIndex],behavior:'instant'});update();},800);}
       };
-      viewport.addEventListener('scroll',update,{passive:true});
-      viewport.addEventListener('keydown',event => {
-        if(event.target !== viewport || !['ArrowLeft','ArrowRight'].includes(event.key))return;
-        event.preventDefault();move(event.key === 'ArrowLeft' ? -1 : 1);
+      const scheduleMeasure=()=>{if(viewport.clientWidth!==layoutWidth&&resizeIndex===null)resizeIndex=requestedIndex??activeIndex;clearTimeout(layoutTimer);layoutTimer=setTimeout(measure,120);};
+      const settle=()=>{
+        if(!targets.length)return;
+        if(viewport.clientWidth!==layoutWidth){scheduleMeasure();return;}
+        if(resizeIndex!==null)return;
+        activeIndex=nearest();requestedIndex=null;
+        if(Math.abs(viewport.scrollLeft-targets[activeIndex])>1)viewport.scrollTo({left:targets[activeIndex],behavior:'instant'});
+        update();
+      };
+      viewport.addEventListener('scroll',()=>{clearTimeout(timer);timer=setTimeout(settle,160);update();},{passive:true});
+      viewport.addEventListener('scrollend',settle);
+      viewport.addEventListener('pointerdown',()=>{requestedIndex=null;if(resizeIndex!==null){clearTimeout(resizeTimer);resizeIndex=null;}},{passive:true});
+      viewport.addEventListener('keydown',event=>{
+        if(event.target!==viewport||!['ArrowLeft','ArrowRight'].includes(event.key))return;
+        event.preventDefault();move(event.key==='ArrowLeft'?-1:1);
       });
-      window.addEventListener('resize',update,{passive:true});window.addEventListener('load',update,{once:true});
-      new ResizeObserver(update).observe(viewport);requestAnimationFrame(update);
+      window.addEventListener('resize',scheduleMeasure,{passive:true});window.addEventListener('load',scheduleMeasure,{once:true});
+      const observer=new ResizeObserver(scheduleMeasure);observer.observe(viewport);cards.forEach(node=>observer.observe(node));
+      measure();
+
     }
     // Header and icon are a single toggle, including a second click to collapse.
     document.querySelectorAll('.t585__accordion').forEach(item => {

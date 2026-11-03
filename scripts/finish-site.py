@@ -139,11 +139,15 @@ for page in PUBLIC.rglob('*.html'):
         elif answer.get_text(strip=True).startswith('Our company'):
             answer.string='Если вас интересует лечение под общим наркозом, уточните доступность этой услуги у администратора и обсудите свой запрос с врачом на консультации.'
     if not soup.select_one('script[src^="/interactions.js"]'):
-        soup.body.append(soup.new_tag('script',src='/interactions.js?v=1',defer=''))
+        soup.body.append(soup.new_tag('script',src='/interactions.js?v=2',defer=''))
     for stylesheet in soup.select('link[href^="/site-enhancements.css"]'):
-        stylesheet['href']='/site-enhancements.css?v=3'
+        stylesheet['href']='/site-enhancements.css?v=4'
     for script in soup.select('script[src^="/site-enhancements.js"]'):
         script['src']='/site-enhancements.js?v=3'
+    if not soup.select_one('link[href^="/content-repairs.css"]'):
+        soup.head.append(soup.new_tag('link',rel='stylesheet',href='/content-repairs.css?v=1'))
+    for script in soup.select('script[src*="tilda-feed"]'):
+        script['src']=script['src'].split('?')[0]+'?v=2'
     page.write_text(str(soup))
 for file in (PUBLIC/'assets').glob('*.css'):file.write_text(transform_css(file.read_text()))
 palette_file.write_text(json.dumps(palette,indent=2))
@@ -169,3 +173,9 @@ css+='@media(prefers-color-scheme:dark){:root:not([data-site-theme="light"]){'+r
 css+='html[data-site-theme="dark"]{'+rules+'}'+prefix(extra,'html[data-site-theme="dark"]')
 (PUBLIC/'theme.css').write_text(css)
 print('Updated 17 pages, six patient articles and dark palette:',len(palette),'tokens')
+
+# Mirrored feed URLs are relative; preserve the origin (including local preview ports).
+for file in (PUBLIC/'assets').glob('*tilda-feed*.js'):
+    text=file.read_text()
+    text=text.replace('window.location.protocol+"//"+window.location.hostname+"/"+t.url.split("/").slice(3).join("/")','window.location.origin+new URL(t.url,window.location.origin).pathname')
+    file.write_text(text)
