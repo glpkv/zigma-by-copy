@@ -1,3 +1,25 @@
+/* Prevent the edge-injected photo conveyor from restarting when Safari only
+   changes viewport height as its address bar expands or collapses. */
+(() => {
+  const originalAddEventListener = window.addEventListener;
+  window.addEventListener = function(type, listener, options) {
+    if (type === 'resize' && typeof listener === 'function') {
+      const source = Function.prototype.toString.call(listener);
+      if (source.includes('.zigma-photo-row') && source.includes('conveyors()')) {
+        let previousWidth = document.documentElement.clientWidth;
+        const widthOnlyListener = function(event) {
+          const width = document.documentElement.clientWidth;
+          if (Math.abs(width - previousWidth) < 2) return;
+          previousWidth = width;
+          return listener.call(this, event);
+        };
+        return originalAddEventListener.call(this, type, widthOnlyListener, options);
+      }
+    }
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+})();
+
 /* UI repairs do not send appointment data or load third-party form services. */
 (() => {
   const ready = () => {
