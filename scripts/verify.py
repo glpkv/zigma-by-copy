@@ -4,7 +4,7 @@ import json,re
 from pathlib import Path
 from urllib.parse import urlsplit,parse_qs
 from bs4 import BeautifulSoup
-root=Path(__file__).resolve().parents[1]; dist=root/'dist'
+root=Path(__file__).resolve().parents[1]; dist=root/'public'
 pages=json.loads((root/'scripts/page-inventory.json').read_text())
 assets=json.loads((root/'scripts/asset-manifest.json').read_text())
 errors=[]

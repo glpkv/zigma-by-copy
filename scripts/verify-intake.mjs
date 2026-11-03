@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {webcrypto} from 'node:crypto';
+import {validateAppointment,saveAppointment} from '../intake/github-store.mjs';
+import {handleAppointments} from '../intake/endpoint.mjs';
+const data={id:webcrypto.randomUUID(),name:'Тестовый посетитель',phone:'80291234567',page:'/therapy/',consent:true};
+assert.equal(validateAppointment(data).phone,'+375291234567');
+for (const patch of [{consent:false},{phone:'+79991234567'},{id:'wrong'},{name:'x\nHeader'}]) assert.throws(()=>validateAppointment({...data,...patch}));
+const post=(body,headers={})=>new Request('https://example.test/api/appointments',{method:'POST',headers:{Origin:'https://example.test','Content-Type':'application/json',...headers},body:JSON.stringify(body)});
+assert.equal((await handleAppointments(post(data),{})).status,503);
+assert.equal((await handleAppointments(post(data,{Origin:'https://bad.test'}),{APPOINTMENTS_GITHUB_TOKEN:'test'})).status,403);
+assert.equal((await handleAppointments(post({...data,consent:false}),{APPOINTMENTS_GITHUB_TOKEN:'test'})).status,400);
+assert.equal((await handleAppointments(post({...data,name:'x'.repeat(5000)}),{APPOINTMENTS_GITHUB_TOKEN:'test'})).status,413);
+let savedBody, attempts=0;
+const csv='id,created_at,name,phone,page,consent\n';
+const mock=async(url,options)=>{
+ if(!url.includes('/contents/'))return Response.json({private:true});
+ if(options.method==='PUT'){savedBody=JSON.parse(options.body);return Response.json({}, {status:++attempts===1?409:201});}
+ return Response.json({sha:'current',size:csv.length,encoding:'base64',content:btoa(csv)});
+};
+await saveAppointment(data,'test',mock);
+assert.equal(attempts,2);
+const stored=Buffer.from(savedBody.content,'base64').toString();
+assert.match(stored,/Тестовый посетитель/);
+assert.match(stored,/'\+375291234567/);
+await assert.rejects(saveAppointment(data,'test',async()=>Response.json({private:false})),/PRIVATE_REPOSITORY_REQUIRED/);
+let calls=0;
+const duplicate=csv+'"'+data.id+'",existing\n';
+await saveAppointment(data,'test',async(url)=>{calls++;return Response.json(url.includes('/contents/')?{sha:'x',size:100,encoding:'base64',content:btoa(duplicate)}:{private:true});});
+assert.equal(calls,2);
+const success=await handleAppointments(post(data),{APPOINTMENTS_GITHUB_TOKEN:'test'},async()=>({id:data.id}));
+assert.equal(success.status,201);
+console.log('PASS: Belarus phones, consent, body limit, origin, private repository, conflict retries and duplicate prevention.');

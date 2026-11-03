@@ -10,7 +10,8 @@ const window = { fetch: async (...args) => { requests.push(args); return { ok: t
 const context = { window, XMLHttpRequest: XHR, HTMLFormElement: Form, URL, Request,
   location: { href: 'https://example.test/therapy', origin: 'https://example.test' },
   navigator: {}, document: { addEventListener: (type, fn) => { handlers[type] = fn; } } };
-vm.runInNewContext(await readFile(new URL('../dist/local-only.js', import.meta.url), 'utf8'), context);
+vm.runInNewContext(await readFile(new URL('../public/local-only.js', import.meta.url), 'utf8'), context);
+assert.equal(requests.shift()[0], '/api/appointments');
 await window.fetch('https://feeds.tildaapi.biz/api/getfeed/?feeduid=147617004841&size=4&slice=2');
 assert.equal(requests.pop()[0], 'https://example.test/feeds/147617004841-4-2.json');
 const xhr = new XHR();

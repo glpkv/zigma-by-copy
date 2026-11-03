@@ -5,7 +5,7 @@ from urllib.parse import urlsplit
 import hashlib,json,re
 from bs4 import BeautifulSoup,Comment
 from PIL import Image
-ROOT=Path(__file__).resolve().parents[1];DIST=ROOT/'dist';ASSETS=DIST/'assets'
+ROOT=Path(__file__).resolve().parents[1];DIST=ROOT/'public';ASSETS=DIST/'assets'
 manifest_path=ROOT/'scripts/asset-manifest.json'
 manifest=json.loads(manifest_path.read_text())
 files=list(ASSETS.iterdir());before=sum(p.stat().st_size for p in files)

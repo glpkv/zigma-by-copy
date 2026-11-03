@@ -1,10 +1,11 @@
 <dialog class="site-dialog" id="appointment-dialog" aria-labelledby="appointment-title">
   <button class="site-dialog__close" type="button" data-close-dialog aria-label="Закрыть окно записи">×</button>
   <h2 id="appointment-title">Записаться на приём</h2>
-  <p>Онлайн-запись пока отключена. Вы можете позвонить в клинику: <a href="tel:+375296400303">+375 29 640-03-03</a>.</p>
+  <p>Оставьте имя и номер телефона для обратного звонка или позвоните: <a href="tel:+375296400303">+375 29 640-03-03</a>.</p>
   <form action="#" data-local-only="true">
     <label>Имя<input name="name" autocomplete="given-name" placeholder="Ваше имя"></label>
     <label>Телефон<input name="phone" type="tel" autocomplete="tel" placeholder="+375 (__) ___-__-__"></label>
+    <label><input type="checkbox" required> Даю согласие на обработку имени и телефона для обратного звонка. <a href="/privacy-policy">Политика конфиденциальности</a></label>
     <button class="site-dialog__submit" type="submit">Записаться</button>
   </form>
 </dialog>

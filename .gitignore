@@ -3,3 +3,12 @@
 .DS_Store
 *.tar.gz
 __pycache__/
+.secrets/
+node_modules/
+.env.local
+dist/
+.next/
+.wrangler/
+.sites-runtime/
+.dev.vars*
+.openai/execution-profile.json

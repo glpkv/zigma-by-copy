@@ -7,7 +7,7 @@ from urllib.parse import urljoin,urlsplit,urldefrag
 import subprocess
 from bs4 import BeautifulSoup
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'dist'
+OUT=ROOT/'public'
 CACHE=ROOT/'.cache'
 CACHE.mkdir(exist_ok=True)
 OUT.mkdir(exist_ok=True)
@@ -186,3 +186,4 @@ print('Complete:',len(pages),'pages,',len(assets),'assets,',len(failures),'failu
 # Apply publication fixes and asset compression after the fresh mirror is assembled.
 import sys
 subprocess.run([sys.executable,str(ROOT/"scripts/prepare-site.py")],check=True)
+subprocess.run([sys.executable,str(ROOT/"scripts/fix-phone.py")],check=True)
