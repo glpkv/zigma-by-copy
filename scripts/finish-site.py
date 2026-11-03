@@ -143,7 +143,7 @@ for page in PUBLIC.rglob('*.html'):
     for stylesheet in soup.select('link[href^="/site-enhancements.css"]'):
         stylesheet['href']='/site-enhancements.css?v=3'
     for script in soup.select('script[src^="/site-enhancements.js"]'):
-        script['src']='/site-enhancements.js?v=2'
+        script['src']='/site-enhancements.js?v=3'
     page.write_text(str(soup))
 for file in (PUBLIC/'assets').glob('*.css'):file.write_text(transform_css(file.read_text()))
 palette_file.write_text(json.dumps(palette,indent=2))

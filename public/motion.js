@@ -63,6 +63,34 @@
       }
     });
   }
+  function watchConveyors(){
+    const board=document.querySelector('#rec374766006 .t396__artboard');
+    if(!board)return;
+    let timer,geometry;
+    const refresh=()=>{
+      const bounds=board.getBoundingClientRect();
+      const sources=[...board.querySelectorAll('.tn-atom.t-bgimg[data-original]')];
+      // Relative coordinates ignore scrolling and mobile address-bar height changes.
+      const next=JSON.stringify([Math.round(bounds.width),...sources.map(atom=>{
+        const r=atom.closest('.tn-elem').getBoundingClientRect();
+        return [r.left-bounds.left,r.top-bounds.top,r.width,r.height].map(value=>Math.round(value*10)/10);
+      })]);
+      if(next===geometry)return;
+      geometry=next;
+      board.querySelectorAll('.zigma-photo-row').forEach(node=>node.remove());
+      board.querySelectorAll('.zigma-photo-source').forEach(node=>node.classList.remove('zigma-photo-source'));
+      conveyors();
+    };
+    const schedule=()=>{clearTimeout(timer);timer=setTimeout(refresh,100);};
+    if('ResizeObserver' in window){
+      const observer=new ResizeObserver(schedule);observer.observe(board);
+      board.querySelectorAll('.tn-atom.t-bgimg[data-original]').forEach(atom=>observer.observe(atom.closest('.tn-elem')));
+    }
+    window.addEventListener('resize',schedule,{passive:true});
+    window.addEventListener('load',schedule,{once:true});
+    document.fonts?.ready.then(schedule);
+    schedule();
+  }
   function prepareHeaders(){
     document.querySelectorAll('.t396__artboard').forEach(board=>{
       if(board.closest('#t-footer'))return;
@@ -92,10 +120,8 @@
   function start(){
     prepareHeaders();decorate();cards();
     document.querySelectorAll('.tn-elem[data-elem-type="button"]>.tn-atom,.t-submit,.site-dialog__submit,.site-mobile-header__appointment,.site-mobile-footer__cta,.clinic-map__route').forEach(node=>node.classList.add('zigma-motion-button'));
+    conveyors();watchConveyors();
     if(!('IntersectionObserver' in window)||!Element.prototype.animate)return;
-    conveyors();
-
-    let resizeTimer,lastViewportWidth=document.documentElement.clientWidth;window.addEventListener('resize',()=>{const nextWidth=document.documentElement.clientWidth;if(Math.abs(nextWidth-lastViewportWidth)<2)return;lastViewportWidth=nextWidth;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{document.querySelectorAll('.zigma-photo-row').forEach(n=>n.remove());document.querySelectorAll('.zigma-photo-source').forEach(n=>n.classList.remove('zigma-photo-source'));conveyors();},250);},{passive:true});
     progress=document.createElement('div');progress.className='zigma-scroll-progress';progress.setAttribute('aria-hidden','true');document.body.appendChild(progress);
     observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){observer.unobserve(entry.target);play(entry.target,entry.target.dataset.zigmaMotion);}},{threshold:.12,rootMargin:'0px 0px -65px 0px'});
     collect(document);window.addEventListener('load',()=>{prepareHeaders();decorate();cards();collect(document);conveyors();},{once:true});

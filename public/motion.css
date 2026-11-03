@@ -15,7 +15,6 @@
  html[data-site-motion="on"] .zigma-card-photo.zigma-card-active:before,html[data-site-motion="on"] .zigma-card-photo:hover:before{transform:scale(1.045)}
  html[data-site-motion="on"] .t-feed__post .js-feed-post-image{transition:scale .7s var(--zigma-motion-ease)}
  html[data-site-motion="on"] .t-feed__post:hover .js-feed-post-image,html[data-site-motion="on"] .t-feed__post:focus-within .js-feed-post-image{scale:1.035}
- html[data-site-motion="on"] .zigma-photo-row:has(.zigma-photo:hover) .zigma-photo-track,html[data-site-motion="on"] .zigma-photo-row:focus-within .zigma-photo-track{animation-play-state:paused}
  html[data-site-motion="on"] .zigma-photo-track>.zigma-photo:hover{scale:1.055;z-index:3;filter:brightness(1.06)}
 }
 @media(max-width:959px){.zigma-photo{border-radius:9px!important}}
