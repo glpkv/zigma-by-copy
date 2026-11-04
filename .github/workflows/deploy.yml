@@ -12,6 +12,31 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - name: Validate Google intake and free static specification
+        run: |
+          node scripts/verify-google-intake.mjs
+          node --check public/local-only.js
+          python3 - <<'PY'
+          import json
+          spec = json.load(open('.do/app.yaml'))
+          assert not any(spec.get(key) for key in ('services', 'workers', 'databases', 'jobs', 'functions'))
+          assert len(spec['static_sites']) == 1
+          config = json.load(open('public/intake-config.json'))
+          assert config['endpoint'].startswith('https://script.google.com/macros/s/') and config['endpoint'].endswith('/exec')
+          json.dump({'spec': spec, 'update_all_source_versions': True}, open('/tmp/app-update.json', 'w'))
+          PY
+      - name: Apply free static app specification
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X PUT \
+            -H "Authorization: Bearer $DIGITALOCEAN_ACCESS_TOKEN" \
+            -H 'Content-Type: application/json' \
+            --data-binary @/tmp/app-update.json \
+            https://api.digitalocean.com/v2/apps/ae6b9098-c411-4c86-9451-92fe455391d7 \
+            --output /tmp/app-update-response.json
       - name: Deploy latest main
         env:
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

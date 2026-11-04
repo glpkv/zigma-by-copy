@@ -2,10 +2,14 @@
 (() => {
   'use strict';
   const originalFetch = window.fetch;
-  const intakeEndpoint='/api/appointments';
+  let intakeEndpoint='';
   let intakeEnabled = false;
-  originalFetch.call(window, intakeEndpoint).then(response => response.ok ? response.json() : null)
-    .then(config => { intakeEnabled = config?.enabled === true; }).catch(() => {});
+  originalFetch.call(window, '/intake-config.json', {cache:'no-store'}).then(response => response.ok ? response.json() : null)
+    .then(config => {
+      if (typeof config?.endpoint !== 'string' || !/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(config.endpoint)) return;
+      intakeEndpoint=config.endpoint;
+      intakeEnabled=true;
+    }).catch(() => {});
   const message = 'Демонстрационная версия: запись пока отключена. Данные не отправлены.';
   function showNotice(form) {
     if (!form) return;
@@ -42,7 +46,7 @@
     notice.textContent = 'Сохраняем заявку…';
     const submit=form.querySelector('button[type="submit"],input[type="submit"],.t-submit');if(submit)submit.disabled=true;
     try {
-      const response = await originalFetch.call(window, intakeEndpoint, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname,selection})});
+      const response = await originalFetch.call(window, intakeEndpoint, {method:'POST',credentials:'omit',redirect:'follow',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({id:form.dataset.requestId,name,phone,consent,page:location.pathname,selection,website:form.querySelector('[name="website"]')?.value||''})});
       const result = await response.json();
       if (!response.ok || result.ok !== true) throw new Error('SAVE_FAILED');
       notice.textContent = 'Заявка сохранена. Администратор свяжется с вами, уточнит стоимость и согласует время. Это запрос на обратный звонок, время приёма ещё не забронировано.';

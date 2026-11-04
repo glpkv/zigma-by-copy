@@ -151,7 +151,7 @@ for url,html in pages.items():
         if u.startswith('https:'): html=html.replace(u[6:],local)
     # Preserve the visual Tilda form renderer, but make submission impossible.
     guard=soup.new_tag('script',src='/local-only.js')
-    policy='<meta http-equiv="Content-Security-Policy" content="connect-src &apos;self&apos;; form-action &apos;none&apos;; object-src &apos;none&apos;; base-uri &apos;self&apos;">'
+    policy='<meta http-equiv="Content-Security-Policy" content="connect-src &apos;self&apos; https://script.google.com https://script.googleusercontent.com; form-action &apos;none&apos;; object-src &apos;none&apos;; base-uri &apos;self&apos;">'
     html=html.replace('<head>','<head>'+policy+str(guard),1)
     dest=OUT/pagefile(url);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(html)
 # Materialize feed slices and popup content using the same data as the original.

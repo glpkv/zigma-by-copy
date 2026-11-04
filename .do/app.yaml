@@ -1,23 +1,6 @@
 {
   "name": "zigma-clinic",
   "region": "fra",
-  "services": [
-    {
-      "name": "web",
-      "dockerfile_path": "Dockerfile",
-      "source_dir": "/",
-      "http_port": 8080,
-      "instance_count": 1,
-      "instance_size_slug": "apps-s-1vcpu-0.5gb",
-      "health_check": {
-        "http_path": "/healthz"
-      },
-      "git": {
-        "repo_clone_url": "https://github.com/glpkv/zigma-by-copy.git",
-        "branch": "main"
-      }
-    }
-  ],
   "domains": [
     {
       "domain": "zigma.gleblapkovsky.com",
@@ -33,9 +16,21 @@
           }
         },
         "component": {
-          "name": "web"
+          "name": "website"
         }
       }
     ]
-  }
+  },
+  "static_sites": [
+    {
+      "name": "website",
+      "source_dir": "/public",
+      "output_dir": ".",
+      "index_document": "index.html",
+      "git": {
+        "repo_clone_url": "https://github.com/glpkv/zigma-by-copy.git",
+        "branch": "main"
+      }
+    }
+  ]
 }
